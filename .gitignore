@@ -2,3 +2,5 @@
 __pycache__/
 .vscode/
 process_files/glove*
+habitus_ui_interface-main/venv/
+
