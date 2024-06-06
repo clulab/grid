@@ -4,7 +4,7 @@ Welcome to the Grid! This is a prototype tool for visualizing and curating quali
  
 ## Installation
 1. `Python3 is required - You'll need version 3.9+. If that's already the case, skip the next
-step. * To check your python version, you may open Command Prompt (Windows) or Terminal (MacOS) and type python3 --version`
+step. (Note: Neither Python 3.10 nor 3.11 seem to work for Windows 11 because of pandas.)  * To check your python version, you may open Command Prompt (Windows) or Terminal (MacOS) and type python3 --version`
 
 1. `Install python3`
 [Python](https://www.python.org/downloads/release/python-3106/)
