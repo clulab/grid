@@ -4,17 +4,35 @@ import time
 
 from .document import Document
 from .frontend import Frontend
+from .javafx_backend import JavafxBackend
 
 class JavafxFrontend(Frontend):
-    def __init__(self, path: str, k: int, clustering_algorithm: str):
+    def __init__(self, file: str, path: str, k: int, clustering_algorithm: str):
         super().__init__(path)
         self.path = path
         self.clustering_algorithm = clustering_algorithm
-        self.grid = None
         self.copy_on = False
         self.clicked_col = None
         self.clicked_row = None
         self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
+        self.backend = JavafxBackend(file, self.backend) # Replace the backend with a new one having access to the old.
+        # self.grid = self.backend.get_initial_grid()
+        backend = self.backend
+
+        self.heat_map = {
+            "cobalt locations 1":   { 0: 1.0, 1: 0.8, 2: 0.6, 3: 0.4, 4: 0.2 },
+            "cobalt locations 2":   { 0: 0.8, 1: 0.6, 2: 0.4, 3: 0.2, 4: 0.0 }
+        }
+        self.grid = {
+            "filename": backend.filename,
+            "anchor": backend.anchor,
+            "sentences": backend.sentences,
+            "clicked_sentences": [],
+            "grid": self.heat_map,
+            "col_num_to_name": [ "col_one", "col_two", "col_three", "col_four", "col_all" ], # col_num_to_name,
+            "frozen_columns": [], #frozen_columns,
+            "row_contents": backend.row_contents
+        }
 
     def find_document(self, text: str) -> Document:
         return next(document for document in self.grid.documents if document.readable == text)
@@ -27,6 +45,8 @@ class JavafxFrontend(Frontend):
         return documents
 
     def show_grid(self) -> dict:
+        return self.grid
+    
         clusters = self.grid.clusters
         rows = self.grid.rows
 

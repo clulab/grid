@@ -28,36 +28,40 @@ class JavafxApp(FastAPI):
             return {"message": "Backend is ready!"}
 
         @self.get("/data/")
-        def root(data: DataFrame = Depends(self.frontend.show_grid)): # Depends( my function that changes data for front end )
-            return data # returns to front end
+        def root(): # data: DataFrame): # Depends( my function that changes data for front end )
+            grid = self.frontend.show_grid()
+            return grid # returns to front end
 
-        @self.get("/showGrids/")
-        async def showGrids():
-            grids = []
-            for file in os.listdir(self.frontend.path):
-                if file.endswith("specs.csv"): # All Grids write out an anchor file
-                    gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
-                    grids.append(gridName[0])
-            grids.sort()
-            return {'grids': grids, 'filepath': self.frontend.path}
+        # @self.get("/showGrids/")
+        # async def showGrids():
+        #     grids = []
+        #     for file in os.listdir(self.frontend.path):
+        #         if file.endswith("specs.csv"): # All Grids write out an anchor file
+        #             gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
+        #             grids.append(gridName[0])
+        #     grids.sort()
+        #     return {'grids': grids, 'filepath': self.frontend.path}
 
-        @self.get("/processSupercorpus/")
-        async def processSupercorpus(supercorpusFilepath: str):
+        # @self.get("/processSupercorpus/")
+        # async 
+        def processSupercorpus(supercorpusFilepath: str):
             print(supercorpusFilepath)
             return self.frontend.backend.process_supercorpus(supercorpusFilepath)
+        self.processSupercorpus = processSupercorpus
 
         @self.get("/setSuperfiles/")
         async def setSuperfiles(corpusFilename: str, rowFilename: str):
             return self.frontend.backend.set_superfiles(corpusFilename, rowFilename)
 
-        @self.get("/loadNewGrid/")
-        async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
-            print("loadNewGrid", newFilename, newAnchor)
-            if self.frontend.backend.set_superfiles(corpusFilename, rowFilename):
-                return self.frontend.load_new_grid(newFilename, newAnchor)
-            else:
-                return False
+        # @self.get("/loadNewGrid/")
+        # async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
+        #     print("loadNewGrid", newFilename, newAnchor)
+        #     if self.frontend.backend.set_superfiles(corpusFilename, rowFilename):
+        #         return self.frontend.load_new_grid(newFilename, newAnchor)
+        #     else:
+        #         return False
 
+        # Load the current grid, ignoring the argument.
         @self.get("/loadGrid/")
         async def loadGrid(text: str):
             print("loading grid ", text)
@@ -74,10 +78,10 @@ class JavafxApp(FastAPI):
             print("saving grid as ", text)
             return self.frontend.save_as_grid(text)
 
-        @self.get("/deleteGrid/")
-        async def deleteGrid(text: str):
-            print("deleting ", text)
-            return self.frontend.delete_grid(text)
+        # @self.get("/deleteGrid/")
+        # async def deleteGrid(text: str):
+        #     print("deleting ", text)
+        #     return self.frontend.delete_grid(text)
 
         @self.get("/drag/")
         async def drag(row: str, col: int, sent: str):
