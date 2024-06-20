@@ -47,7 +47,8 @@ class JavafxApp(FastAPI):
         def processSupercorpus(supercorpusFilepath: str):
             print(supercorpusFilepath)
             return self.frontend.backend.process_supercorpus(supercorpusFilepath)
-        self.processSupercorpus = processSupercorpus
+
+#        self.processSupercorpus = processSupercorpus
 
         @self.get("/setSuperfiles/")
         async def setSuperfiles(corpusFilename: str, rowFilename: str):
