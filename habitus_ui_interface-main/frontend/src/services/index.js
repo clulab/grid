@@ -4,7 +4,7 @@ export const fetchDataFromApi = async (path) => {
   const url = `${apiUrl}${path}`;
 
   try {
-    const response = await fetch(url, { mode: 'no-cors' });
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`${response.status} - ${response.statusText}`);
     }

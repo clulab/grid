@@ -19,8 +19,6 @@ function GridPage() {
         setWaitingFilename(true)
         fetchDataFromApi('/data/')
             .then(data => {
-                console.log(data);
-                console.log("The data was supposedly gotten.");
                 setFilename(data.filename);
                 setAnchor(data.anchor);
                 setWaitingFilename(false);
@@ -76,8 +74,19 @@ function GridPage() {
                             onInput={(evt) => handleSaveTyping(evt)}
                         />
                         <Button color="green" icon="teenyicons:save-outline" onClick={() => handleSaveClick()} noGap />
+                        <Button color="red" icon="octicon:trash-16" onClick={() => setOpenModalDelete(true)} noGap />
                     </div>
                 </Header>
+                <Modal
+                    title="Delete Grid?"
+                    description="This cannot be undone."
+                    onConfirm={() => {
+                        handleDeleteClick()
+                        setOpenModalDelete(false)
+                    }}
+                    open={openModalDelete}
+                    onClose={() => setOpenModalDelete(false)}
+                />
                 <Modal
                     title="A Grid with this name already exists."
                     description="Would you like to overwrite ?"

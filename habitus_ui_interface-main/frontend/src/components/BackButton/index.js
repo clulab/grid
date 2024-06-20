@@ -7,9 +7,14 @@ import './styles.css';
 function BackButton(props) {
   return (
     <>
-      <div className="align-horizontal">
-        {props.screenName}
-      </div>
+      <Link className='link-back-button' to={'/gallery'}>
+        <div className="align-horizontal">
+          <div className='styled-back-button'>
+            <Icon icon="akar-icons:arrow-back" width="18" height="18" style={{ zIndex: 1 }} />
+          </div>
+          {props.screenName}
+        </div>
+      </Link>
     </>
   );
 }
