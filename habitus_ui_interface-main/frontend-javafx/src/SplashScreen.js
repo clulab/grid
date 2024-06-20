@@ -8,7 +8,7 @@ export default function SplashScreen({ apiurl }) {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    fetch('http://127.0.0.1:8000/backend-ready')
+    fetch('http://127.0.0.1:8000/backend-ready', { mode: 'no-cors' })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

@@ -229,108 +229,157 @@ frontend = UvicornFrontend('./process_files/', 6,'kmeans')
 # - call into the frontend to perform the action
 # - return the right kind of result, probably forwarded from the frontend
 
+def enter(entrypoint):
+    print()
+    print(f" Enter: {entrypoint}")
+    return entrypoint
+
+def respond(entrypoint, result):
+    print(f"Result: {result}")
+    print(f"  Exit: {entrypoint}")
+    return(result)
+
 @app.get("/backend-ready")
 def backend_ready():
-    return {"message": "Backend is ready!"}
+    entrypoint = enter("/backend-ready")
+    result = {"message": "Backend is ready!"}
+    return respond(entrypoint, result)
     
 @app.get("/data/")
 def root(data: DataFrame = Depends(frontend.show_grid)): # Depends( my function that changes data for front end )
-    return data # returns to front end
+    entrypoint = enter("/data/")
+    result = data
+    return respond(entrypoint, result) # returns to front end
 
 @app.get("/showGrids/")
 async def showGrids():
+    entrypoint = enter("/showGrids/")
     grids = []
     for file in os.listdir(frontend.path):
         if file.endswith("specs.csv"): # All Grids write out an anchor file
             gridName = file.rsplit('_', 1) # But not all Grids are named by the anchor, they have their own filenames
             grids.append(gridName[0])
     grids.sort()
-    return {'grids': grids, 'filepath': frontend.path}
+    result = {'grids': grids, 'filepath': frontend.path}
+    return respond(entrypoint, result)
 
 @app.get("/processSupercorpus/")
 async def processSupercorpus(supercorpusFilepath: str):
+    entrypoint = enter("/processSupercorpus/")
     print(supercorpusFilepath)
-    return frontend.backend.process_supercorpus(supercorpusFilepath)
+    result = frontend.backend.process_supercorpus(supercorpusFilepath)
+    return respond(entrypoint, result)
 
 @app.get("/setSuperfiles/")
 async def setSuperfiles(corpusFilename: str, rowFilename: str):
-    return frontend.backend.set_superfiles(corpusFilename, rowFilename)
+    entrypoint = enter("/setSuperfiles/")
+    result = frontend.backend.set_superfiles(corpusFilename, rowFilename)
+    return respond(entrypoint, result)
 
 @app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
+    entrypoint = enter("/loadNewGrid/")
     print("loadNewGrid", newFilename, newAnchor)
     if frontend.backend.set_superfiles(corpusFilename, rowFilename):
-        return frontend.load_new_grid(newFilename, newAnchor)
+        result = frontend.load_new_grid(newFilename, newAnchor)
     else:
-        return False
+        result = False
+    return respond(entrypoint, result)
 
 @app.get("/loadGrid/")
 async def loadGrid(text: str):
+    entrypoint = enter("/loadGrid/")
     print("loading grid ", text)
-    grid = frontend.load_grid(text)
-    return grid
+    result = frontend.load_grid(text)
+    return respond(entrypoint, result)
 
 @app.get("/saveGrid/")
 async def saveGrid():
+    entrypoint = enter("/saveGrid/")
     print("saving grid")
-    return frontend.save_grid()
+    result = frontend.save_grid()
+    return respond(entrypoint, result)
 
 @app.get("/saveAsGrid/")
 async def saveAsGrid(text: str):
+    entrypoint = enter("/saveAsGrid/")
     print("saving grid as ", text)
-    return frontend.save_as_grid(text)
+    result = frontend.save_as_grid(text)
+    return respond(entrypoint, result)
 
 @app.get("/deleteGrid/")
 async def deleteGrid(text: str):
+    entrypoint = enter("/deleteGrid/")
     print("deleting ", text)
-    return frontend.delete_grid(text)
+    result = frontend.delete_grid(text)
+    return respond(entrypoint, result)
 
 @app.get("/drag/")
 async def drag(row: str, col: int, sent: str):
+    entrypoint = enter("/drag/")
     print("drag", f"Row: {row}\tCol: {col}\tText: {sent}")
-    return frontend.move(row, col, sent)
+    result = frontend.move(row, col, sent)
+    return respond(entrypoint, result)
 
 @app.get("/click/")
 async def click(row: str, col: int):
+    entrypoint = enter("/click/")
     print("click", row, col)
-    return frontend.click(row, col)
+    result = frontend.click(row, col)
+    return respond(entrypoint, result)
 
 @app.get("/sentenceClick/")
 async def sentenceClick(text: str):
+    entrypoint = enter("/sentenceClick/")
     print("sentenceClick", text)
-    return frontend.sentence_click(text)
+    result = frontend.sentence_click(text)
+    return respond(entrypoint, result)
 
 @app.get("/editName/")
 async def editName(id: int, name: str):
+    entrypoint = enter("/editName/")
     print("editName", id, name)
-    return frontend.set_name(id, name)
+    result = frontend.set_name(id, name)
+    return respond(entrypoint, result)
 
 @app.get("/deleteFrozenColumn/")
 async def deleteFrozenColumn(id: int):
+    entrypoint = enter("/deleteFrozenColumn/")
     print("deleteFrozen", id)
-    return frontend.delete_frozen(id)
+    result = frontend.delete_frozen(id)
+    return respond(entrypoint, result)
 
 @app.get("/textInput/")
 async def textInput(text: str):
+    entrypoint = enter("/textInput/")
     print("textInput", text)
-    return frontend.create_cluster(text)
+    result = frontend.create_cluster(text)
+    return respond(entrypoint, result)
 
 @app.get("/setK/")
 async def setK(k: int):
+    entrypoint = enter("/setK/")
     print("setK", k)
-    return frontend.set_k(k)
+    result = frontend.set_k(k)
+    return respond(entrypoint, result)
 
 @app.get("/regenerate/")
 async def regenerate():
+    entrypoint = enter("/regenerate/")
     print("regenerate")
-    return frontend.regenerate()
+    result = frontend.regenerate()
+    return respond(entrypoint, result)
 
 @app.get("/copyToggle/")
 async def copyToggle():
+    entrypoint = enter("/copyToggle/")
     print("copyToggle")
-    return frontend.toggle_copy()
+    result = frontend.toggle_copy()
+    return respond(entrypoint, result)
 
 @app.get("/trash/")
 async def trash(text: str):
+    entrypoint = enter("/trash/")
     print("trash ", text)
-    return frontend.trash(text)
+    result = frontend.trash(text)
+    return respond(entrypoint, result)
