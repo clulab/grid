@@ -8,7 +8,7 @@ export default function SplashScreen({ apiurl }) {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    fetch('http://127.0.0.1:8000/backend-ready', { mode: 'no-cors' })
+    fetch('http://127.0.0.1:8000/backend-ready')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -44,7 +44,7 @@ export default function SplashScreen({ apiurl }) {
           <h1 class="title">Welcome to THE GRID</h1>
           <div class="loading-container">
             {backendReady ?
-              <Link to="/gallery">
+              <Link to="/grid/">
                 <button className="access-button button-appear">
                   Access
                 </button>
