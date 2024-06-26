@@ -26,7 +26,7 @@ export default function Grid() {
       .then(data => {
         setCorpus(data.clicked_sentences);
         setGridRows(data.grid);
-        setColNumToName(data.col_num_to_name);
+        setColNumToName(data.col_names);
         setFrozenColumns(data.frozen_columns);
         setRowContents(data.row_contents);
         setWaiting(false)
@@ -57,7 +57,7 @@ export default function Grid() {
         (evt) => {
           setCorpus(evt.clicked_sentences);
           setGridRows(evt.grid);
-          setColNumToName(evt.col_num_to_name);
+          setColNumToName(evt.col_names);
           setContext('')
         }
       }
@@ -73,7 +73,7 @@ export default function Grid() {
   if (rows.length > 0) {
     let row = rows[0]
     let colIDs = Object.keys(row)
-    let colNames = colIDs.map((colID) => colNumToName[colID])
+    let colNames = colNumToName
     footer = colNames.map((name, ix) =>
       <Footer
         key={ix} id={ix}
@@ -84,7 +84,7 @@ export default function Grid() {
         onFooter={
           (evt) => {
             setGridRows({ ...evt.grid });
-            setColNumToName({ ...evt.col_num_to_name });
+            setColNumToName({ ...evt.col_names });
             setFrozenColumns([...evt.frozen_columns]);
           }
         }
@@ -92,7 +92,7 @@ export default function Grid() {
           (evt) => {
             setCorpus(evt.clicked_sentences);
             setGridRows({ ...evt.grid });
-            setColNumToName({ ...evt.col_num_to_name });
+            setColNumToName({ ...evt.col_names });
             setFrozenColumns([...evt.frozen_columns]);
           }
         }
@@ -133,7 +133,7 @@ export default function Grid() {
                       .then(response => {
                         setCorpus(response.clicked_sentences);
                         setGridRows(response.grid);
-                        setColNumToName(response.col_num_to_name);
+                        setColNumToName(response.col_names);
                         setFrozenColumns(response.frozen_columns)
                       })
                       .then(evt.target.value = '')
@@ -157,7 +157,7 @@ export default function Grid() {
                 .then(response => {
                   setCorpus(response.clicked_sentences);
                   setGridRows(response.grid);
-                  setColNumToName(response.col_num_to_name);
+                  setColNumToName(response.col_names);
                   setFrozenColumns(response.frozen_columns);
                   setWaiting(false);
                 });
@@ -184,5 +184,3 @@ export default function Grid() {
     )
   )
 }
-
-
