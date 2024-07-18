@@ -27,11 +27,11 @@ export default function SplashScreen({ apiurl }) {
   }, [])
 
   return (
-    <div class="container">
-      <div class="flex-container">
-        <div class="text-container">
-          <h1 class="title">Welcome to THE GRID</h1>
-          <div class="loading-container">
+    <div className="container">
+      <div className="flex-container">
+        <div className="text-container">
+          <h1 className="title">Welcome to THE GRID</h1>
+          <div className="loading-container">
             {backendReady ?
               <Link to="/grid/">
                 <button className="access-button button-appear">
@@ -39,15 +39,15 @@ export default function SplashScreen({ apiurl }) {
                 </button>
               </Link>
               :
-              <div class="loading-container">
-                <div class="loading"></div>
+              <div className="loading-container">
+                <div className="loading"></div>
                 <h3>Starting the server...</h3>
               </div>
             }
           </div>
         </div>
 
-        <div class="image-container">
+        <div className="image-container">
           <img src="grid_logo.png" alt="Grid Image" />
         </div>
       </div>
