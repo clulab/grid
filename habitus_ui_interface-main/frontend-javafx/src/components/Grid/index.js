@@ -22,7 +22,8 @@ export default function Grid() {
 
   useEffect(() => {
     setWaiting(true);
-    api.getData().then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
+    api.getData()
+      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
         setCorpus(clicked_sentences);
         setGridRows(grid);
         setColNumToName(col_names);
@@ -80,21 +81,17 @@ export default function Grid() {
         editColName={editColName}
         setEditColName={setEditColName}
         frozenColumns={frozenColumns}
-        onFooter={
-          ([grid, col_names, frozen_columns]) => {
-            setGridRows({ ...grid });
-            setColNumToName({ ...col_names });
-            setFrozenColumns([...frozen_columns]);
-          }
-        }
-        onDeleteFrozen={
-          ([clicked_sentences, grid, col_names, frozen_columns]) => {
-            setCorpus(clicked_sentences);
-            setGridRows({ ...grid });
-            setColNumToName({ ...col_names });
-            setFrozenColumns([...frozen_columns]);
-          }
-        }
+        onFooter={([grid, col_names, frozen_columns]) => {
+          setGridRows({ ...grid });
+          setColNumToName({ ...col_names });
+          setFrozenColumns([...frozen_columns]);
+        }}
+        onDeleteFrozen={([clicked_sentences, grid, col_names, frozen_columns]) => {
+          setCorpus(clicked_sentences);
+          setGridRows({ ...grid });
+          setColNumToName({ ...col_names });
+          setFrozenColumns([...frozen_columns]);
+        }}
       />
     )
   }
@@ -133,9 +130,9 @@ export default function Grid() {
                         setGridRows(grid);
                         setColNumToName(col_names);
                         setFrozenColumns(frozen_columns)
+                        evt.target.value = '';
+                        evt.target.blur();
                       })
-                      .then(evt.target.value = '')
-                      .then(evt.target.blur())
                   }
                 }
               }
@@ -162,10 +159,10 @@ export default function Grid() {
 
             <Button label={clicked ? 'Copy' : 'Copied'} color="blue" icon={clicked ? "icon-park-outline:copy" : 'icon-park-solid:copy'}
               onClick={(evt) => {
-                api.getCopyToggle().then(([copyOn]) => {
-                  // noop
-                })
-                onLaunchClicked(evt);
+                api.getCopyToggle()
+                  .then(([copyOn]) => {
+                    onLaunchClicked(evt);
+                  })
               }}
               clicked={clicked}
             />

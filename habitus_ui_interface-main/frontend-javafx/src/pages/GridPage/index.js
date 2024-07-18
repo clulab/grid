@@ -17,11 +17,12 @@ function GridPage() {
 
   useEffect(() => {
     setWaitingFilename(true);
-    api.getData().then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
+    api.getData()
+      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
       // setFilename(data.filename);
       // setAnchor(data.anchor);
       // setWaitingFilename(false);
-    });
+      });
   }, [])
 
   return (

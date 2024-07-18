@@ -21,7 +21,8 @@ export default function GridCell({ id, colorValue, rowName, rowContents, colName
   })
 
   return (
-    <td ref={dropRef}
+    <td
+      ref={dropRef}
       style={{
         width: "4em",
         height: "55px",
@@ -30,15 +31,14 @@ export default function GridCell({ id, colorValue, rowName, rowContents, colName
         background: gradientArray[ix],
         border: isActive ? '2px solid #BE1C06' : `2px solid ${gradientArray[ix]}`
       }}
-
-      onClick={
-        (evt) => {
-          api.getClick(rowName, colName).then(([clicked_sentences]) => {
-              onChange(clicked_sentences)
+      onClick={(evt) => {
+        api.getClick(rowName, colName)
+          .then(([clicked_sentences]) => {
+            onChange(clicked_sentences);
+            activateCell(id);
           })
-          activateCell(id)
-        }
-      }>
+      }}
+    >
       {isOver && "Drop"}
     </td>
   )

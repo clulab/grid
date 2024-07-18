@@ -27,19 +27,17 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               placeholder={colName}
               className="footer"
               style={{ '--placeholder-color': 'gray' }}
-              onKeyDown={
-                (evt) => {
-                  if (evt.key == "Enter") {
-                    api.getEditName(id, evt.target.value)
-                      .then(([grid, col_names, frozen_columns]) => {
-                        onFooter(grid, col_names, frozen_columns)
-                        setEditColName('')
-                      })
-                    evt.target.value = ''
-                    evt.target.blur()
-                  }
+              onKeyDown={(evt) => {
+                if (evt.key == "Enter") {
+                  api.getEditName(id, evt.target.value)
+                    .then(([grid, col_names, frozen_columns]) => {
+                      onFooter(grid, col_names, frozen_columns);
+                      setEditColName('');
+                      evt.target.value = ''
+                      evt.target.blur()
+                    })
                 }
-              }
+              }}
             /> : colName}
         </div>
         {!colName.includes('Unassigned') && showButtons && (

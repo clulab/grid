@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useEffect, useState } from 'react';
-import './SplashScreen.css';
 import { Link } from "react-router-dom";
 import { api } from "services";
+import './SplashScreen.css';
 
 export default function SplashScreen({ apiurl }) {
 
@@ -10,25 +10,13 @@ export default function SplashScreen({ apiurl }) {
 
   function checkBackendReady() {
     api.getBackendReady()
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.message === 'Backend is ready!') {
-          // createWindow()
-          setBackendReady(true)
-        } else {
-          // O backend ainda não está pronto, tentar novamente após 1 segundo
+      .then(([message]) => {
+        if (message === 'Backend is ready!')
+          setBackendReady(true);
+        else
           setTimeout(checkBackendReady, 5000);
-        }
       })
       .catch((error) => {
-        // Tratar erros
-        console.error('Error fetching backend status:', error);
-        // Tentar novamente após 1 segundo
         setTimeout(checkBackendReady, 5000);
       });
   }
