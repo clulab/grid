@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd"
-import { fetchDataFromApi, toQuery } from "services"
+import { api } from "services"
 
 export default function GridCell({ id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive }) {
 
@@ -10,10 +10,9 @@ export default function GridCell({ id, colorValue, rowName, rowContents, colName
   const [{ isOver }, dropRef] = useDrop({
     accept: 'sentence',
     drop: (item) => {
-      var query = toQuery([["row", rowName], ["col", colName], ["sent", item.text]])
-      fetchDataFromApi(`/drag/${query}`)
-        .then(data => {
-          onDrop(data)
+      api.getDrag(rowName, colName, item.text)
+        .then(([clicked_sentences, grid, col_names]) => {
+          onDrop(clicked_sentences, grid, col_names)
         })
     },
     collect: (monitor) => ({
@@ -34,12 +33,9 @@ export default function GridCell({ id, colorValue, rowName, rowContents, colName
 
       onClick={
         (evt) => {
-          let query = toQuery([["row", rowName], ["col", colName]])
-
-          fetchDataFromApi(`/click/${query}`)
-            .then(response => {
-              onChange(response)
-            })
+          api.getClick(rowName, colName).then(([clicked_sentences]) => {
+              onChange(clicked_sentences)
+          })
           activateCell(id)
         }
       }>

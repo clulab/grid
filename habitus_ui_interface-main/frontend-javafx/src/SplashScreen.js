@@ -2,13 +2,14 @@
 import { useEffect, useState } from 'react';
 import './SplashScreen.css';
 import { Link } from "react-router-dom";
+import { api } from "services";
 
 export default function SplashScreen({ apiurl }) {
 
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    fetch('http://127.0.0.1:8000/backend-ready')
+    api.getBackendReady()
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

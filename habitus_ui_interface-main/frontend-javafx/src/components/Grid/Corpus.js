@@ -1,6 +1,6 @@
 import { useDrag } from "react-dnd";
 import { useEffect, useState } from "react";
-import { fetchDataFromApi, toQuery } from "services";
+import { api } from "services";
 
 function Sentence({ text, onChange, activateSentence, isActive }) {
     const [{ isDragging }, dragRef] = useDrag({
@@ -13,15 +13,14 @@ function Sentence({ text, onChange, activateSentence, isActive }) {
     return <li className="li-corpus" ref={dragRef} onDrag={(evt) => { activateSentence() }}
         style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
         onClick={(evt) => {
-            let query = toQuery([["text", text]]);
-            fetchDataFromApi(`/sentenceClick/${query}`)
-                .then(response => {
+            api.getSentenceClick(text)
+                .then(([text]) => { // TODO: what does this return?
                     if (isActive) {
                         activateSentence();
                         onChange([]);
                     } else {
                         activateSentence(text);
-                        onChange(response);
+                        onChange(text);
                     }
                 });
         }}

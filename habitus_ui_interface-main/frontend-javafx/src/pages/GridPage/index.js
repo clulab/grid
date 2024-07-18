@@ -2,36 +2,33 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid } from 'components';
-import { fetchDataFromApi, toQuery } from "services"
+import { api } from "services"
 import './styles.css';
 
 function GridPage() {
-    const [filename, setFilename] = useState('');
-    const [anchor, setAnchor] = useState('');
-    const [waitingFileName, setWaitingFilename] = useState(false)
-    const [saveAs, setSaveAs] = useState('')
-    const [openModalSave, setOpenModalSave] = useState(false)
-    const [openModalDelete, setOpenModalDelete] = useState(false)
+  const [filename, setFilename] = useState('');
+  const [anchor, setAnchor] = useState('');
+  const [waitingFileName, setWaitingFilename] = useState(false)
+  const [saveAs, setSaveAs] = useState('')
+  const [openModalSave, setOpenModalSave] = useState(false)
+  const [openModalDelete, setOpenModalDelete] = useState(false)
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        setWaitingFilename(true)
-        fetchDataFromApi('/data/')
-            .then(data => {
-                console.log(data);
-                console.log("The data was supposedly gotten.");
-                // setFilename(data.filename);
-                // setAnchor(data.anchor);
-                // setWaitingFilename(false);
-            });
-    }, [])
+  useEffect(() => {
+    setWaitingFilename(true);
+    api.getData().then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
+      // setFilename(data.filename);
+      // setAnchor(data.anchor);
+      // setWaitingFilename(false);
+    });
+  }, [])
 
-    return (
-        <div>
-            <Grid />
-        </div >
-    );
+  return (
+    <div>
+      <Grid />
+    </div >
+  );
 }
 
 export default GridPage;

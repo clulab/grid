@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Icon } from "@iconify/react"
-import { fetchDataFromApi, toQuery } from "services"
+import { api } from "services"
 
 export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
   const [showButtons, setShowButtons] = useState(false)
@@ -30,10 +30,9 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               onKeyDown={
                 (evt) => {
                   if (evt.key == "Enter") {
-                    let query = toQuery([["id", id], ["name", evt.target.value]])
-                    fetchDataFromApi(`/editName/${query}`)
-                      .then(response => {
-                        onFooter(response)
+                    api.getEditName(id, evt.target.value)
+                      .then(([grid, col_names, frozen_columns]) => {
+                        onFooter(grid, col_names, frozen_columns)
                         setEditColName('')
                       })
                     evt.target.value = ''
@@ -62,10 +61,9 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
                 width="19" height="20"
                 color={hoverDelete ? "#DC3545" : "#616160"}
                 onClick={(evt) => {
-                  let query = toQuery([["id", id]])
-                  fetchDataFromApi(`/deleteFrozenColumn/${query}`)
-                    .then(response => {
-                      onDeleteFrozen(response)
+                  api.getDeleteFrozenColumn(id)
+                    .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+                      onDeleteFrozen(clicked_sentences, grid, col_names, frozen_columns)
                     })
                 }}
                 onMouseEnter={() => setHoverDelete(true)}

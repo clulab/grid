@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchDataFromApi, toQuery } from "services"
+import { api } from "services"
 import "./styles.css"
 import Sentences from "./Sentences"
 import { Button, Input, Loading, } from 'components';
@@ -21,15 +21,14 @@ export default function Grid() {
   const [waiting, setWaiting] = useState(false)
 
   useEffect(() => {
-    setWaiting(true)
-    fetchDataFromApi('/data/')
-      .then(data => {
-        setCorpus(data.clicked_sentences);
-        setGridRows(data.grid);
-        setColNumToName(data.col_names);
-        setFrozenColumns(data.frozen_columns);
-        setRowContents(data.row_contents);
-        setWaiting(false)
+    setWaiting(true);
+    api.getData().then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
+        setCorpus(clicked_sentences);
+        setGridRows(grid);
+        setColNumToName(col_names);
+        setFrozenColumns(frozen_columns);
+        setRowContents(row_contents);
+        setWaiting(false);
       });
   }, [])
 
@@ -48,16 +47,16 @@ export default function Grid() {
       rowContents={rowContents}
       data={cells}
       onChange={
-        (evt) => {
-          setCorpus(evt);
+        (clickedSentences) => {
+          setCorpus(clickedSentences);
           setContext('')
         }
       }
       onDrop={
-        (evt) => {
-          setCorpus(evt.clicked_sentences);
-          setGridRows(evt.grid);
-          setColNumToName(evt.col_names);
+        ([clicked_sentences, grid, col_names]) => {
+          setCorpus(clicked_sentences);
+          setGridRows(grid);
+          setColNumToName(col_names);
           setContext('')
         }
       }
@@ -82,18 +81,18 @@ export default function Grid() {
         setEditColName={setEditColName}
         frozenColumns={frozenColumns}
         onFooter={
-          (evt) => {
-            setGridRows({ ...evt.grid });
-            setColNumToName({ ...evt.col_names });
-            setFrozenColumns([...evt.frozen_columns]);
+          ([grid, col_names, frozen_columns]) => {
+            setGridRows({ ...grid });
+            setColNumToName({ ...col_names });
+            setFrozenColumns([...frozen_columns]);
           }
         }
         onDeleteFrozen={
-          (evt) => {
-            setCorpus(evt.clicked_sentences);
-            setGridRows({ ...evt.grid });
-            setColNumToName({ ...evt.col_names });
-            setFrozenColumns([...evt.frozen_columns]);
+          ([clicked_sentences, grid, col_names, frozen_columns]) => {
+            setCorpus(clicked_sentences);
+            setGridRows({ ...grid });
+            setColNumToName({ ...col_names });
+            setFrozenColumns([...frozen_columns]);
           }
         }
       />
@@ -128,13 +127,12 @@ export default function Grid() {
               (evt) => {
                 if (evt.key === "Enter") {
                   if (evt.target.value.length > 0) {
-                    let query = toQuery([["text", evt.target.value]]);
-                    fetchDataFromApi(`/textInput/${query}`)
-                      .then(response => {
-                        setCorpus(response.clicked_sentences);
-                        setGridRows(response.grid);
-                        setColNumToName(response.col_names);
-                        setFrozenColumns(response.frozen_columns)
+                    api.getTextInput(evt.target.value)
+                      .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+                        setCorpus(clicked_sentences);
+                        setGridRows(grid);
+                        setColNumToName(col_names);
+                        setFrozenColumns(frozen_columns)
                       })
                       .then(evt.target.value = '')
                       .then(evt.target.blur())
@@ -145,40 +143,36 @@ export default function Grid() {
 
             <Input placeholder="Max. Columns" onInput={
               (evt) => {
-                let query = toQuery([["k", evt.target.value === '' ? 0 : evt.target.value]]);
-                fetchDataFromApi(`/setK/${query}`)
-                  .then(response => console.log("response", response))
+                const k = evt.target.value === '' ? 0 : evt.target.value;
+                api.getSetK(k);
               }
             } />
 
             <Button label="Update Grid" color="green" icon="ci:arrow-reload-02" onClick={() => {
               setWaiting(true)
-              fetchDataFromApi(`/regenerate/`)
-                .then(response => {
-                  setCorpus(response.clicked_sentences);
-                  setGridRows(response.grid);
-                  setColNumToName(response.col_names);
-                  setFrozenColumns(response.frozen_columns);
+              api.getRegenerate()
+                .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+                  setCorpus(clicked_sentences);
+                  setGridRows(grid);
+                  setColNumToName(col_names);
+                  setFrozenColumns(frozen_columns);
                   setWaiting(false);
                 });
             }} />
 
             <Button label={clicked ? 'Copy' : 'Copied'} color="blue" icon={clicked ? "icon-park-outline:copy" : 'icon-park-solid:copy'}
               onClick={(evt) => {
-                fetchDataFromApi(`/copyToggle/`)
-                  .then(response => {
-                    console.log(response);
-                    console.log('copy click!');
-                  });
+                api.getCopyToggle().then(([copyOn]) => {
+                  // noop
+                })
                 onLaunchClicked(evt);
-              }
-              }
+              }}
               clicked={clicked}
             />
           </div>
         </div>
-        <Sentences corpus={corpus} context={context} onChangeContext={(evt) => {
-          setContext(evt)
+        <Sentences corpus={corpus} context={context} onChangeContext={(text) => {
+          setContext(text)
         }} />
       </DndProvider>
     )

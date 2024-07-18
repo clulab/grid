@@ -1,18 +1,123 @@
 const apiUrl = 'http://127.0.0.1:8000';
 
-export const fetchDataFromApi = async (path) => {
+export const fetchJsonFromApi = async (path) => {
   const url = `${apiUrl}${path}`;
+  console.log(url);
 
   try {
     const response = await fetch(url);
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`${response.status} - ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (error) {
+
+    const result = await response.json();
+    console.log(result);
+    return result;
+  }
+  catch (error) {
     console.log('error fetching ->', error);
   }
 };
+
+export const fetchResponseFromApi = (path) => {
+  const url = `${apiUrl}${path}`;
+  console.log(url);
+  const responsePromise = fetch(url);
+
+  return responsePromise;
+};
+
+export const api = {
+  getBackendReady: function() { // change to return optional message
+    const responsePromise = fetchResponseFromApi("/backend-ready");
+
+    return responsePromise;
+  },
+  getClick: async function(rowName, colName) {
+    const query = toQuery([["row", rowName], ["col", colName]]);
+    const json = await fetchJsonFromApi(`/click/${query}`);
+    const clickedSentences = json.clicked_sentences
+
+    return [clickedSentences];
+  },
+  getCopyToggle: async function() {
+    const json = await fetchJsonFromApi(`/copyToggle/`);
+    const copyOn = json;
+
+    return [copyOn];
+  },
+  getData: async function() {
+    const json = await fetchJsonFromApi('/data/');
+    const clickedSentences = json.clicked_sentences;
+    const grid = json.grid;
+    const colNames = json.col_names;
+    const frozenColumns = json.frozen_columns;
+    const rowContents = json.row_contents;
+    const filename = json.filename;
+    const anchor = json.anchor;
+
+    return [clickedSentences, grid, colNames, frozenColumns, rowContents, filename, anchor];
+  },
+  getDeleteFrozenColumn: async function(id) {
+    const query = toQuery([["id", id]]);
+    const json = await fetchJsonFromApi(`/deleteFrozenColumn/${query}`);
+    const clickedSentences = json.clicked_sentences;
+    const grid = json.grid;
+    const colNames = json.col_names;
+    const frozenColumns = json.frozen_columns;
+
+    return [clickedSentences, grid, colNames, frozenColumns];
+  },
+  getDrag: async function(rowName, colName, text) {
+    const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);
+    const json = await fetchJsonFromApi(`/drag/${query}`);
+    const clickedSentences = json.clicked_sentences;
+    const grid = json.grid;
+    const colNames = json.col_names;
+
+    return [clickedSentences, grid, colNames];
+  },
+  getEditName: async function(id, name) {
+    const query = toQuery([["id", id], ["name", name]]);
+    const json = await fetchJsonFromApi(`/editName/${query}`);
+    const grid = json.grid;
+    const colNames = json.col_names;
+    const frozenColumns = json.frozen_columns;
+    
+    return [grid, colNames, frozenColumns];
+  },
+  getRegenerate: async function() {
+    const json = await fetchJsonFromApi(`/regenerate/`);
+    const clickedSentences = json.clicked_sentences;
+    const grid = json.grid;
+    const colNames = json.col_names;
+    const frozenColumns = json.frozen_columns;
+
+    return [clickedSentences, grid, colNames, frozenColumns];
+  },
+  getSentenceClick: async function(text) {
+    const query = toQuery([["text", text]]);
+    const json = await fetchJsonFromApi(`/sentenceClick/${query}`);
+    const text = json;
+
+    return [text];
+  },
+  getSetK: async function(k) {
+    const query = toQuery([["k", k]]);
+    const json = await fetchJsonFromApi(`/setK/${query}`);
+
+    return [];
+  },
+  getTextInput: async function(text) {
+    const query = toQuery([["text", text]]);
+    const json = await fetchJsonFromApi(`/textInput/${query}`);
+    const clickedSentences = json.clicked_sentences;
+    const grid = json.grid;
+    const colNames = json.col_names;
+    const frozenColumns = json.frozenColumns;
+
+    return [clickedSentences, grid, colNames, frozenColumns];
+  }
+}
 
 export function toHex(string) {
   var array = [];
@@ -24,9 +129,9 @@ export function toHex(string) {
 // This should be an array of arrays of two.
 // The two are name and values.
 export function toQuery(namesAndValues) {
-  let urlSearchParams = new URLSearchParams();
+  const urlSearchParams = new URLSearchParams();
   namesAndValues.forEach(nameAndValue => urlSearchParams.append(nameAndValue[0], nameAndValue[1]));
-  let query = "?" + urlSearchParams.toString();
+  const query = "?" + urlSearchParams.toString();
   console.info("Query is " + query);
   return query;
 }
