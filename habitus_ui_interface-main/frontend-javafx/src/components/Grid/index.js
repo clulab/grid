@@ -17,7 +17,7 @@ export default function Grid() {
   const [colNumToName, setColNumToName] = useState({})
   const [frozenColumns, setFrozenColumns] = useState([])
   const [rowContents, setRowContents] = useState({})
-  const [clicked, setClicked] = useState(false);
+  const [copying, setCopying] = useState(false);
   const [waiting, setWaiting] = useState(false)
 
   useEffect(() => {
@@ -35,8 +35,7 @@ export default function Grid() {
 
   function handleCopyButtonClicked(evt) {
     evt.preventDefault();
-    setClicked(!clicked);
-
+    setCopying(!copying);
   }
 
   const activateCell = (item) => setActiveCell(item)
@@ -83,7 +82,7 @@ export default function Grid() {
         setEditColName={setEditColName}
         frozenColumns={frozenColumns}
         onFooter={([grid, col_names, frozen_columns]) => {
-          setGridRows({ ...grid });
+          setGridRows({ ...grid }); // TODO, are both {} and ... necessary?
           setColNumToName({ ...col_names });
           setFrozenColumns([...frozen_columns]);
         }}
@@ -159,9 +158,9 @@ export default function Grid() {
             }} />
 
             <Button
-              label={!clicked ? 'Moving' : 'Copying' }
+              label={copying ? "Copying" : "Moving"}
               color="blue"
-              icon={!clicked ? 'icon-park-solid:bring-to-front' : "icon-park-solid:bring-to-front-one" }
+              icon={copying ? "icon-park-solid:bring-to-front-one" : "icon-park-solid:bring-to-front"}
               onClick={(evt) => {
                 api.getCopyToggle()
                   .then(([copyOn]) => {
