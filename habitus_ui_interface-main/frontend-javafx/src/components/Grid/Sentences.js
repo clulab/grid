@@ -9,7 +9,8 @@ export default function Sentences ({ corpus, context, onChangeContext }) {
             textAlign: 'center', margin: 'auto', fontWeight: 600,
             color: '#2c2c2c'
           }}>Sentences</h2>
-          <Corpus sentences={corpus}
+          <Corpus
+            sentences={corpus}
             onChange={onChangeContext}
           />
         </div>

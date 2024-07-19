@@ -157,20 +157,23 @@ export default function Grid() {
                 });
             }} />
 
-            <Button label={clicked ? 'Copy' : 'Copied'} color="blue" icon={clicked ? "icon-park-outline:copy" : 'icon-park-solid:copy'}
+            <Button label={clicked ? 'Moving' : 'Copying'} color="blue" icon={clicked ? 'icon-park-solid:copy' : "icon-park-outline:copy" }
               onClick={(evt) => {
                 api.getCopyToggle()
                   .then(([copyOn]) => {
                     onLaunchClicked(evt);
                   })
               }}
-              clicked={clicked}
             />
           </div>
         </div>
-        <Sentences corpus={corpus} context={context} onChangeContext={(text) => {
-          setContext(text)
-        }} />
+        <Sentences
+          corpus={corpus}
+          context={context}
+          onChangeContext={(text) => {
+            setContext(text);
+          }}
+        />
       </DndProvider>
     )
   )

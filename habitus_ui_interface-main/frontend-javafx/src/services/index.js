@@ -38,7 +38,7 @@ export const api = {
   getClick: async function(rowName, colName) {
     const query = toQuery([["row", rowName], ["col", colName]]);
     const json = await fetchFromApiWithoutError(`/click/${query}`);
-    const clickedSentences = json.clicked_sentences
+    const clickedSentences = json
 
     return [clickedSentences];
   },
