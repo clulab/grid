@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { api } from "services";
+import { api } from "api";
 import './SplashScreen.css';
 
 export default function SplashScreen({ apiurl }) {

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Icon } from "@iconify/react"
-import { api } from "services"
+import { api } from "api"
 
 export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
   const [showButtons, setShowButtons] = useState(false)

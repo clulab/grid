@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd"
-import { api } from "services"
+import { api } from "api"
 
 export default function GridCell({ id, colorValue, rowName, rowContents, colName, onChange, onDrop, activateCell, isActive }) {
 

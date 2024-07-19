@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import { Grid } from 'components';
-import { api } from "services"
+import { api } from "api"
 import './styles.css';
 
 function GridPage() {

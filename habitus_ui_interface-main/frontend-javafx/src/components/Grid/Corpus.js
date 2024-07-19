@@ -1,6 +1,6 @@
 import { useDrag } from "react-dnd";
 import { useEffect, useState } from "react";
-import { api } from "services";
+import { api } from "api";
 
 function Sentence({ text, onChange, activateSentence, isActive }) {
   const [{ isDragging }, dragRef] = useDrag({

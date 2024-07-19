@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { api } from "services"
+import { api } from "api"
 import "./styles.css"
 import Sentences from "./Sentences"
 import { Button, Input, Loading, } from 'components';
@@ -68,6 +68,7 @@ export default function Grid() {
 
   // Get the col names from the first row
   // let rowNames = Object.keys(data)
+  console.info("gridrows are " + gridRows);
   let rows = Object.values(gridRows)
   let footer = null
   if (rows.length > 0) {
