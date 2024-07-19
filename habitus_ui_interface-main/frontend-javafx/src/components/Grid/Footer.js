@@ -28,7 +28,7 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               className="footer"
               style={{ '--placeholder-color': 'gray' }}
               onKeyDown={(evt) => {
-                if (evt.key == "Enter") {
+                if (evt.key === "Enter") {
                   api.getEditName(id, evt.target.value)
                     .then(([grid, col_names, frozen_columns]) => {
                       onFooter(grid, col_names, frozen_columns);

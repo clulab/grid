@@ -17,7 +17,7 @@ export default function Grid() {
   const [colNumToName, setColNumToName] = useState({})
   const [frozenColumns, setFrozenColumns] = useState([])
   const [rowContents, setRowContents] = useState({})
-  const [clicked, setClicked] = useState([false]);
+  const [clicked, setClicked] = useState(false);
   const [waiting, setWaiting] = useState(false)
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Grid() {
       });
   }, [])
 
-  function onLaunchClicked(evt) {
+  function handleCopyButtonClicked(evt) {
     evt.preventDefault();
     setClicked(!clicked);
 
@@ -73,7 +73,7 @@ export default function Grid() {
   let footer = null
   if (rows.length > 0) {
     let row = rows[0]
-    let colIDs = Object.keys(row)
+    // let colIDs = Object.keys(row)
     let colNames = colNumToName
     footer = colNames.map((name, ix) =>
       <Footer
@@ -158,11 +158,14 @@ export default function Grid() {
                 });
             }} />
 
-            <Button label={clicked ? 'Moving' : 'Copying'} color="blue" icon={clicked ? 'icon-park-solid:copy' : "icon-park-outline:copy" }
+            <Button
+              label={!clicked ? 'Moving' : 'Copying' }
+              color="blue"
+              icon={!clicked ? 'icon-park-solid:bring-to-front' : "icon-park-solid:bring-to-front-one" }
               onClick={(evt) => {
                 api.getCopyToggle()
                   .then(([copyOn]) => {
-                    onLaunchClicked(evt);
+                    handleCopyButtonClicked(evt);
                   })
               }}
             />

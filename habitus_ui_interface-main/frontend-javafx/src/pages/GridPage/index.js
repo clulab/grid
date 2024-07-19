@@ -6,14 +6,14 @@ import { api } from "api"
 import './styles.css';
 
 function GridPage() {
-  const [filename, setFilename] = useState('');
-  const [anchor, setAnchor] = useState('');
-  const [waitingFileName, setWaitingFilename] = useState(false)
+  // const [filename, setFilename] = useState('');
+  // const [anchor, setAnchor] = useState('');
+  // const [waitingFileName, setWaitingFilename] = useState(false)
 
   // const navigate = useNavigate();
 
   useEffect(() => {
-    setWaitingFilename(true);
+    // setWaitingFilename(true);
     api.getData()
       .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename, anchor]) => {
       // setFilename(data.filename);

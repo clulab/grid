@@ -1,6 +1,6 @@
 const apiUrl = 'http://127.0.0.1:8000';
 
-const fetchFromApi = async (path, rethrow) => {
+const fetchFromApi = async (path) => {
   const url = `${apiUrl}${path}`;
   console.log(url);
 
@@ -15,41 +15,32 @@ const fetchFromApi = async (path, rethrow) => {
   }
   catch (error) {
     console.log('error fetching ->', error);
-    if (rethrow)
-      throw error;
+    throw error;
   }
-};
-
-const fetchFromApiWithoutError = async (path) => {
-  return fetchFromApi(path, true); // TODO: should probably always re-throw
-}
-
-const fetchFromApiWithError = async (path) => {
-  return fetchFromApi(path, true)
 };
 
 export const api = {
   getBackendReady: async function() {
-    const json = await fetchFromApiWithError("/backend-ready");
+    const json = await fetchFromApi("/backend-ready");
     const message = json.message;
 
     return [message];
   },
   getClick: async function(rowName, colName) {
     const query = toQuery([["row", rowName], ["col", colName]]);
-    const json = await fetchFromApiWithoutError(`/click/${query}`);
+    const json = await fetchFromApi(`/click/${query}`);
     const clickedSentences = json
 
     return [clickedSentences];
   },
   getCopyToggle: async function() {
-    const json = await fetchFromApiWithoutError(`/copyToggle/`);
+    const json = await fetchFromApi(`/copyToggle/`);
     const copyOn = json;
 
     return [copyOn];
   },
   getData: async function() {
-    const json = await fetchFromApiWithoutError('/data/');
+    const json = await fetchFromApi('/data/');
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -62,7 +53,7 @@ export const api = {
   },
   getDeleteFrozenColumn: async function(id) {
     const query = toQuery([["id", id]]);
-    const json = await fetchFromApiWithoutError(`/deleteFrozenColumn/${query}`);
+    const json = await fetchFromApi(`/deleteFrozenColumn/${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -72,7 +63,8 @@ export const api = {
   },
   getDrag: async function(rowName, colName, text) {
     const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);
-    const json = await fetchFromApiWithoutError(`/drag/${query}`);
+    window.alert("calling drag");
+    const json = await fetchFromApi(`/drag/${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -81,7 +73,7 @@ export const api = {
   },
   getEditName: async function(id, name) {
     const query = toQuery([["id", id], ["name", name]]);
-    const json = await fetchFromApiWithoutError(`/editName/${query}`);
+    const json = await fetchFromApi(`/editName/${query}`);
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
@@ -89,7 +81,7 @@ export const api = {
     return [grid, colNames, frozenColumns];
   },
   getRegenerate: async function() {
-    const json = await fetchFromApiWithoutError(`/regenerate/`);
+    const json = await fetchFromApi(`/regenerate/`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -99,20 +91,20 @@ export const api = {
   },
   getSentenceClick: async function(text) {
     const query = toQuery([["text", text]]);
-    const json = await fetchFromApiWithoutError(`/sentenceClick/${query}`);
+    const json = await fetchFromApi(`/sentenceClick/${query}`);
     const newText = json;
 
     return [newText];
   },
   getSetK: async function(k) {
     const query = toQuery([["k", k]]);
-    const json = await fetchFromApiWithoutError(`/setK/${query}`);
+    /*const json =*/ await fetchFromApi(`/setK/${query}`);
 
     return [];
   },
   getTextInput: async function(text) {
     const query = toQuery([["text", text]]);
-    const json = await fetchFromApiWithoutError(`/textInput/${query}`);
+    const json = await fetchFromApi(`/textInput/${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -120,13 +112,6 @@ export const api = {
 
     return [clickedSentences, grid, colNames, frozenColumns];
   }
-}
-
-export function toHex(string) {
-  var array = [];
-  for (var i = 0; i < string.length; i++)
-    array[i] = ("000" + string.charCodeAt(i).toString(16)).slice(-4);
-  return array.join("");
 }
 
 // This should be an array of arrays of two.
