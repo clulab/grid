@@ -54,6 +54,31 @@ export default function Grid() {
       });
   }
 
+  const handleNewColumnEnter = (event) => {
+    if (event.key === "Enter") {
+      // TODO: trim it
+      if (event.target.value.length > 0) {
+        api.getTextInput(event.target.value)
+          .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+            setCorpus(clicked_sentences);
+            setGridRows(grid);
+            setColNumToName(col_names);
+            setFrozenColumns(frozen_columns)
+            event.target.value = '';
+            event.target.blur();
+          })
+      }
+    }
+  }
+
+  const handleSetKEnter = (event) => {
+    if (event.key === "Enter") {
+      // TODO: trim it, check for number and range
+      const k = event.target.value === '' ? 0 : event.target.value;
+      api.getSetK(k);
+    }
+  }
+
   const activateCell = (item) => setActiveCell(item)
 
   let gridRowsAux = gridRows && Object.entries(gridRows).map(([name, cells], ix) =>
@@ -91,7 +116,8 @@ export default function Grid() {
     let colNames = colNumToName
     footer = colNames.map((name, ix) =>
       <Footer
-        key={ix} id={ix}
+        key={ix}
+        id={ix}
         colName={name}
         editColName={editColName}
         setEditColName={setEditColName}
@@ -135,30 +161,15 @@ export default function Grid() {
 
           <div style={{ gap: 5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', maxWidth: '220px' }}>
 
-            <Input placeholder="Create new column" onKeyPress={
-              (event) => {
-                if (event.key === "Enter") {
-                  if (event.target.value.length > 0) {
-                    api.getTextInput(event.target.value)
-                      .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-                        setCorpus(clicked_sentences);
-                        setGridRows(grid);
-                        setColNumToName(col_names);
-                        setFrozenColumns(frozen_columns)
-                        event.target.value = '';
-                        event.target.blur();
-                      })
-                  }
-                }
-              }
-            } />
+            <Input 
+              placeholder="Create new column"
+              onKeyPress={handleNewColumnEnter}
+            />
 
-            <Input placeholder="Max. Columns" onInput={
-              (event) => {
-                const k = event.target.value === '' ? 0 : event.target.value;
-                api.getSetK(k);
-              }
-            } />
+            <Input
+              placeholder="Max. Columns"
+              onKeyPress={handleSetKEnter}
+            />
 
             <Button
               label="Update Grid"
