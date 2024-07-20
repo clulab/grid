@@ -33,16 +33,16 @@ export default function Grid() {
       });
   }, [])
 
-  const handleCopyButtonClicked = (evt) => {
-    evt.preventDefault();
+  const handleCopyButtonClicked = (event) => {
+    event.preventDefault();
     api.getCopyToggle()
       .then(([copyOn]) => {
         setCopying(copyOn);
       })
   }
 
-  const handleRegenerateButtonClicked = (evt) => {
-    evt.preventDefault();
+  const handleRegenerateButtonClicked = (event) => {
+    event.preventDefault();
     setWaiting(true)
     api.getRegenerate()
       .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
@@ -136,17 +136,17 @@ export default function Grid() {
           <div style={{ gap: 5, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', maxWidth: '220px' }}>
 
             <Input placeholder="Create new column" onKeyPress={
-              (evt) => {
-                if (evt.key === "Enter") {
-                  if (evt.target.value.length > 0) {
-                    api.getTextInput(evt.target.value)
+              (event) => {
+                if (event.key === "Enter") {
+                  if (event.target.value.length > 0) {
+                    api.getTextInput(event.target.value)
                       .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
                         setCorpus(clicked_sentences);
                         setGridRows(grid);
                         setColNumToName(col_names);
                         setFrozenColumns(frozen_columns)
-                        evt.target.value = '';
-                        evt.target.blur();
+                        event.target.value = '';
+                        event.target.blur();
                       })
                   }
                 }
@@ -154,8 +154,8 @@ export default function Grid() {
             } />
 
             <Input placeholder="Max. Columns" onInput={
-              (evt) => {
-                const k = evt.target.value === '' ? 0 : evt.target.value;
+              (event) => {
+                const k = event.target.value === '' ? 0 : event.target.value;
                 api.getSetK(k);
               }
             } />

@@ -31,7 +31,7 @@ export default function GridCell({ id, colorValue, rowName, rowContents, colName
         background: gradientArray[ix],
         border: isActive ? '2px solid #BE1C06' : `2px solid ${gradientArray[ix]}`
       }}
-      onClick={(evt) => {
+      onClick={(event) => {
         api.getClick(rowName, colName)
           .then(([clicked_sentences]) => {
             onChange(clicked_sentences);

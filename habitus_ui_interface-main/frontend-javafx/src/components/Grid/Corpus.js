@@ -14,9 +14,9 @@ function Sentence({ text, onChange, activateSentence, isActive }) {
     <li 
       className="li-corpus"
       ref={dragRef}
-      onDrag={(evt) => { activateSentence() }}
+      onDrag={(event) => { activateSentence() }}
       style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
-      onClick={(evt) => {
+      onClick={(event) => {
         api.getSentenceClick(text)
           .then(([text]) => { // TODO: what does this return?
             if (isActive) {

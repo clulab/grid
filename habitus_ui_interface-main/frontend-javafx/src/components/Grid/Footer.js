@@ -27,14 +27,14 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               placeholder={colName}
               className="footer"
               style={{ '--placeholder-color': 'gray' }}
-              onKeyDown={(evt) => {
-                if (evt.key === "Enter") {
-                  api.getEditName(id, evt.target.value)
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  api.getEditName(id, event.target.value)
                     .then(([grid, col_names, frozen_columns]) => {
                       onFooter(grid, col_names, frozen_columns);
                       setEditColName('');
-                      evt.target.value = ''
-                      evt.target.blur()
+                      event.target.value = ''
+                      event.target.blur()
                     })
                 }
               }}
@@ -58,7 +58,7 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
                 icon="octicon:trash-16"
                 width="19" height="20"
                 color={hoverDelete ? "#DC3545" : "#616160"}
-                onClick={(evt) => {
+                onClick={(event) => {
                   api.getDeleteFrozenColumn(id)
                     .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
                       onDeleteFrozen(clicked_sentences, grid, col_names, frozen_columns)
