@@ -47,9 +47,8 @@ export const api = {
     const frozenColumns = json.frozen_columns;
     const rowContents = json.row_contents;
     const filename = json.filename;
-    const anchor = json.anchor;
 
-    return [clickedSentences, grid, colNames, frozenColumns, rowContents, filename, anchor];
+    return [clickedSentences, grid, colNames, frozenColumns, rowContents, filename];
   },
   getDeleteFrozenColumn: async function(id) {
     const query = toQuery([["id", id]]);
@@ -119,6 +118,5 @@ export function toQuery(namesAndValues) {
   const urlSearchParams = new URLSearchParams();
   namesAndValues.forEach(nameAndValue => urlSearchParams.append(nameAndValue[0], nameAndValue[1]));
   const query = "?" + urlSearchParams.toString();
-  console.info("Query is " + query);
   return query;
 }
