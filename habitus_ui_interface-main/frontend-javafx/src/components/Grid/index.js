@@ -33,9 +33,25 @@ export default function Grid() {
       });
   }, [])
 
-  function handleCopyButtonClicked(evt) {
+  const handleCopyButtonClicked = (evt) => {
     evt.preventDefault();
-    setCopying(!copying);
+    api.getCopyToggle()
+      .then(([copyOn]) => {
+        setCopying(copyOn);
+      })
+  }
+
+  const handleRegenerateButtonClicked = (evt) => {
+    evt.preventDefault();
+    setWaiting(true)
+    api.getRegenerate()
+      .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+        setCorpus(clicked_sentences);
+        setGridRows(grid);
+        setColNumToName(col_names);
+        setFrozenColumns(frozen_columns);
+        setWaiting(false);
+      });
   }
 
   const activateCell = (item) => setActiveCell(item)
@@ -49,15 +65,15 @@ export default function Grid() {
       onChange={
         (clickedSentences) => {
           setCorpus(clickedSentences);
-          setContext('')
+          setContext([])
         }
       }
       onDrop={
-        ([clicked_sentences, grid, col_names]) => {
+        (clicked_sentences, grid, col_names) => {
           setCorpus(clicked_sentences);
           setGridRows(grid);
           setColNumToName(col_names);
-          setContext('')
+          setContext([])
         }
       }
       activateCell={activateCell}
@@ -145,28 +161,18 @@ export default function Grid() {
               }
             } />
 
-            <Button label="Update Grid" color="green" icon="ci:arrow-reload-02" onClick={() => {
-              setWaiting(true)
-              api.getRegenerate()
-                .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-                  setCorpus(clicked_sentences);
-                  setGridRows(grid);
-                  setColNumToName(col_names);
-                  setFrozenColumns(frozen_columns);
-                  setWaiting(false);
-                });
-            }} />
+            <Button
+              label="Update Grid"
+              color="green"
+              icon="ci:arrow-reload-02"
+              onClick={handleRegenerateButtonClicked}
+            />
 
             <Button
               label={copying ? "Copying" : "Moving"}
               color="blue"
               icon={copying ? "icon-park-solid:bring-to-front-one" : "icon-park-solid:bring-to-front"}
-              onClick={(evt) => {
-                api.getCopyToggle()
-                  .then(([copyOn]) => {
-                    handleCopyButtonClicked(evt);
-                  })
-              }}
+              onClick={handleCopyButtonClicked}
             />
           </div>
         </div>
