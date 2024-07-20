@@ -83,7 +83,6 @@ export default function Grid() {
 
   // Get the col names from the first row
   // let rowNames = Object.keys(data)
-  console.info("gridrows are " + gridRows);
   let rows = Object.values(gridRows)
   let footer = null
   if (rows.length > 0) {
@@ -97,16 +96,16 @@ export default function Grid() {
         editColName={editColName}
         setEditColName={setEditColName}
         frozenColumns={frozenColumns}
-        onFooter={([grid, col_names, frozen_columns]) => {
-          setGridRows({ ...grid }); // TODO, are both {} and ... necessary?
-          setColNumToName({ ...col_names });
-          setFrozenColumns([...frozen_columns]);
+        onFooter={(grid, col_names, frozen_columns) => {
+          setGridRows(grid);
+          setColNumToName(col_names);
+          setFrozenColumns(frozen_columns);
         }}
-        onDeleteFrozen={([clicked_sentences, grid, col_names, frozen_columns]) => {
+        onDeleteFrozen={(clicked_sentences, grid, col_names, frozen_columns) => {
           setCorpus(clicked_sentences);
-          setGridRows({ ...grid });
-          setColNumToName({ ...col_names });
-          setFrozenColumns([...frozen_columns]);
+          setGridRows(grid);
+          setColNumToName(col_names);
+          setFrozenColumns(frozen_columns);
         }}
       />
     )

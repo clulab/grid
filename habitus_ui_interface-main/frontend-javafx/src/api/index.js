@@ -63,7 +63,6 @@ export const api = {
   },
   getDrag: async function(rowName, colName, text) {
     const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);
-    window.alert("calling drag");
     const json = await fetchFromApi(`/drag/${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
