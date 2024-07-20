@@ -46,9 +46,8 @@ export const api = {
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
     const rowContents = json.row_contents;
-    const filename = json.filename;
 
-    return [clickedSentences, grid, colNames, frozenColumns, rowContents, filename];
+    return [clickedSentences, grid, colNames, frozenColumns, rowContents];
   },
   getDeleteFrozenColumn: async function(id) {
     const query = toQuery([["id", id]]);

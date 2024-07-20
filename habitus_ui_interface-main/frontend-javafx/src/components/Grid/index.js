@@ -23,7 +23,7 @@ export default function Grid() {
   useEffect(() => {
     setWaiting(true);
     api.getData()
-      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, filename]) => {
+      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents]) => {
         setCorpus(clicked_sentences);
         setGridRows(grid);
         setColNumToName(col_names);
