@@ -6,8 +6,24 @@ from .grid import Grid
 class GridTest(unittest.TestCase):
 
 	def setUp(self):
-		backend: Backend = Backend('./process_files/')
-		self.grid: Grid = backend.get_grid(6)
+		path = "./process_files/"
+		supercorpus_filename = ""
+		row_filename = ""
+		supercorpus_filepath = "example"
+		k = 5
+		anchor = "mineral"
+		grid_filename = "grid"
+		clustering_algorithm = "not_surdeanu"
+		
+		backend: Backend = Backend(path)
+		backend.set_superfiles(supercorpus_filename, row_filename)
+		# This below should produce from a filepath
+		# path/filepath.csv
+		# path/cleaned_filepath.csv
+		# path/filepath_row_labels.csv
+		backend.process_supercorpus(supercorpus_filepath)
+
+		self.grid: Grid = backend.get_grid(k, anchor, grid_filename, clustering_algorithm)
 
 	def test_delete_document(self):
 		self.assertEqual(len(self.grid.clusters), 6, "should have correct number of initial clusters")
