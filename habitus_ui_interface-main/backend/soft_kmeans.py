@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 from .cluster_generator import ClusterGenerator
 from .corpus import Corpus
@@ -11,6 +10,9 @@ from .mathematician import betweenness
 from .mathematician import withinness
 from .mathematician import get_composite
 from .mathematician import check_convergence
+from .rng import RNG
+
+import random
 
 class SoftKMeans(ClusterGenerator):
 	def __init__(self, corpus: Corpus, linguist: Linguist, seed: int = 0):
@@ -26,12 +28,13 @@ class SoftKMeans(ClusterGenerator):
 
 		self.clusters = []
 		self.matrix = None
+		self.best_matrix = None
 		self.seed = seed # Should I use this here?
-		self.rndgen = random.Random(self.seed)
+		self.rndgen = RNG(self.seed)
 
 
 	def initialize_clusters_plus_plus(self):
-		first = self.documents[random.sample(range(0, len(self.documents)), 1)][0]
+		first = self.rndgen.choice(self.documents)
 		centroids = [first]
 		for i in range(self.k):
 			Ds = []
@@ -40,7 +43,7 @@ class SoftKMeans(ClusterGenerator):
 			Ds = np.array(Ds)
 			Dsq = Ds**2
 			pDs = (Dsq)/np.sum(Dsq)
-			next_centroid = np.random.choice(self.documents, p = pDs)
+			next_centroid = self.rndgen.randomSample(self.documents, p = pDs)
 			centroids.append(next_centroid)
 		centroids = [[c] for c in centroids]
 		self.clusters = np.array(centroids, dtype = 'object')
@@ -72,15 +75,20 @@ class SoftKMeans(ClusterGenerator):
 
 
 	def get_label_list(self):
-		labels_list = []
-		for doc in self.documents:
-			labels = []
-			for i, cluster in enumerate(self.clusters):
-				if doc in cluster:
-					labels.append(i)
-			labels_list.append(labels)
-		return labels_list
- 
+		if self.clusters:
+			labels_list = []
+			for doc in self.documents:
+				labels = []
+				for i, cluster in enumerate(self.clusters):
+					if doc in cluster:
+						labels.append(i)
+				labels_list.append(labels)
+			return labels_list
+		else:
+			print("We're in trouble!")
+			return None
+
+
 	def generate(self, documents: list[Document], k: int, frozen_document_clusters: list[list[Document]] = [], seeded_document_clusters: list[list[Document]] = [], frozen_documents: list[Document] = []):
 
 		self.documents = np.array(documents, dtype = 'object')
@@ -93,7 +101,10 @@ class SoftKMeans(ClusterGenerator):
 				for s, sc in enumerate(seeded_document_clusters):
 					if d in sc:
 						doc_to_seeded[d_index, s] = 1
-			doc_to_seeded = np.nan_to_num(np.divide(doc_to_seeded, np.sum(doc_to_seeded, axis = 1)[:,None]))
+			sum = np.sum(doc_to_seeded, axis = 1)
+			# Change any 0 to 1 so that division of zeros uses identity element.
+			divisor = np.array([max(1, value) for value in sum])[:,None]
+			doc_to_seeded= np.divide(doc_to_seeded, divisor)
 
 
 		last_C_score = -10000
@@ -118,12 +129,16 @@ class SoftKMeans(ClusterGenerator):
 					if score > last_C_score:
 						last_C_score = score
 						best_model = self.clusters.copy()
+						self.best_matrix = self.matrix
 
 		self.clusters = best_model # Don't add frozen clusters because grid.py does that for you
 
 		labels = self.get_label_list() # Could do this using matrix but then we'd have to keep the matrix
-	
-		return labels, len(self.clusters) # What should actually get returned here?
+		if self.clusters:
+			cluster_len = len(self.clusters)
+		else:
+			cluster_len = 0
+		return labels, cluster_len # What should actually get returned here?
 
 	def update_soft_centroids(self):
 		centroids = []

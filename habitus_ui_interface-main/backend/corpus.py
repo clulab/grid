@@ -39,11 +39,13 @@ class Corpus():
 		self.words_in_docs = list(set(words))
 		
 		self.load_vectors(self.documents, preexisting)
-		self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.npy')
+		# self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.npy')
+		self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.txt')
 
 
 	def load_distances(self, filename: str):
-		doc_distances = np.load(self.path + filename)
+		# doc_distances = np.load(self.path + filename)
+		doc_distances = np.loadtxt(self.path + filename)
 		return doc_distances
 
 
@@ -75,7 +77,8 @@ class Corpus():
 		if not self.model:
 			self.model = KeyedVectors.load_word2vec_format(self.model_filename, no_header = True)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, self.model, self.tfidf, self.linguist.tfidf_vectorizer, None, self.anchor, None, preexisting)
-		np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
+		# np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
+		np.savetxt(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.txt', doc_distances)
 		with open(self.path + self.clean_supercorpus_filename + '_doc_vecs_lem.json', 'w') as file:
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
 
