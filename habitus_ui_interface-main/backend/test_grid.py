@@ -31,7 +31,6 @@ class GridTest(): # (unittest.TestCase):
 		self.backend: Backend = Backend(self.gridConfig.path)
 
 	def setUp(self):
-		self.backend.set_superfiles(self.gridConfig.supercorpus_filename, self.gridConfig.row_filename)
 		# This below should produce from a filepath ending with {wikipedia_article}/
 		# path/cleaned_{wikipedia_article}.csv
 		# path/cleaned_{wikipedia_article}_doc_distances_lem.npy
@@ -40,6 +39,8 @@ class GridTest(): # (unittest.TestCase):
 		# path/{wikipedia_article}_row_labels.csv
 		self.backend.process_supercorpus(self.gridConfig.supercorpus_filepath)
 
+		# This below only works after the files have been generated.
+		self.backend.set_superfiles(self.gridConfig.supercorpus_filename, self.gridConfig.row_filename)
 		self.grid: Grid = self.backend.get_grid( \
 			self.gridConfig.k, \
 			self.gridConfig.anchor, \

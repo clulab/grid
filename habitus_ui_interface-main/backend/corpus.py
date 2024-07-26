@@ -113,7 +113,7 @@ class Corpus():
 						memberships = [label_line[1][row.name] == 1 for row in self.rows]
 					except IndexError:
 						memberships = []
-						# print("Line not found in row_labels: ", readable)
+						print("Line not found in row_labels: ", readable)
 					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
 					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
 					document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)

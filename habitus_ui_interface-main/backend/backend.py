@@ -20,7 +20,7 @@ class Backend():
 		try:
 			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
 			temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
-			row_labels_filename = supercorpus_name + '_row_labels.csv'
+			self.row_labels_filename = supercorpus_name + '_row_labels' # .csv'
 			can_update = os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv')
 
 			if can_update:
@@ -35,18 +35,20 @@ class Backend():
 					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename)
 
 				stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
-				row_labels = pd.read_csv(self.path + row_labels_filename)
+				row_labels = pd.read_csv(self.path + self.row_labels_filename + '.csv')
 				row_labels['stripped'] = stripped
-				row_labels.to_csv(self.path + row_labels_filename)
+				row_labels.to_csv(self.path + self.row_labels_filename + '.csv')
+				rows = [Row(row_name) for row_name in list(row_labels)[2:-1]]
 
 				if can_update:
 					print(f"Updating files associated with corpus {supercorpus_name}") # If there's already an embedding file, update the existing corpus embedding file, don't recalculate everything.
 				else:
 					print(f"Creating vector embeddings for corpus {supercorpus_name}") # Otherwise, you have to make the embeddings files.
 
-				Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
+				self.clean_supercorpus_filename = temporary_clean_supercorpus_filename
+				Corpus(self.path, temporary_clean_supercorpus_filename, self.row_labels_filename, rows, 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
 
-				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': row_labels_filename}
+				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': self.row_labels_filename + '.csv'}
 		except IndexError:
 			print(f"String {supercorpus_filepath} is not a path")
 
