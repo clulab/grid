@@ -271,9 +271,9 @@ async def processSupercorpus(supercorpusFilepath: str):
     return respond(entrypoint, result)
 
 @app.get("/setSuperfiles/")
-async def setSuperfiles(corpusFilename: str, rowFilename: str):
+async def setSuperfiles(corpusFilename: str, rowFilename: str, path: str):
     entrypoint = enter("/setSuperfiles/")
-    result = frontend.backend.set_superfiles(corpusFilename, rowFilename)
+    result = frontend.backend.set_superfiles(corpusFilename, rowFilename, path)
     return respond(entrypoint, result)
 
 @app.get("/loadNewGrid/")

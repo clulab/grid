@@ -56,7 +56,9 @@ class Backend():
 		return {'success': False, 'corpus_file': None, 'rows_file': None}
 
 
-	def set_superfiles(self, supercorpus_filename, row_filename):
+	def set_superfiles(self, supercorpus_filename, row_filename, path):
+		if path:
+			self.path = path
 		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename + ".csv"):
 			self.supercorpus_filename = supercorpus_filename.split(".")[0]
 			self.row_labels_filename = row_filename.split(".")[0]

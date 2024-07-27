@@ -4,6 +4,7 @@ from .grid import Grid
 class GridConfig1():
 	def __init__(self):
 		self.path = "../../../process_files/"
+		self.path2 = None
 		self.supercorpus_filename = "wikipedia_article.csv"
 		self.row_filename = "wikipedia_article_row_labels" # .csv"
 		self.supercorpus_filepath = "../../../process_files/wikipedia_article/"
@@ -15,6 +16,7 @@ class GridConfig1():
 class GridConfig2():
 	def __init__(self):
 		self.path = "../../../process_files/"
+		self.path2 = "../../../process_files/random/"
 		self.supercorpus_filename = "wikipedia_artificial.csv"
 		self.row_filename = "wikipedia_artificial_row_labels" # .csv"
 		self.supercorpus_filepath = "../../../process_files/wikipedia_artificial/"
@@ -38,7 +40,7 @@ class GridTest(): # (unittest.TestCase):
 		backend.process_supercorpus(gridConfig.supercorpus_filepath)
 
 		# This below only works after the files have been generated.
-		backend.set_superfiles(gridConfig.supercorpus_filename, gridConfig.row_filename)
+		backend.set_superfiles(gridConfig.supercorpus_filename, gridConfig.row_filename, gridConfig.path2)
 		grid: Grid = backend.get_grid( \
 			gridConfig.k, \
 			gridConfig.anchor, \
@@ -58,7 +60,7 @@ class GridTest(): # (unittest.TestCase):
 
 	def read(self, gridConfig):
 		backend: Backend = Backend(gridConfig.path)
-		backend.set_superfiles(gridConfig.supercorpus_filename, gridConfig.row_filename)
+		backend.set_superfiles(gridConfig.supercorpus_filename, gridConfig.row_filename, gridConfig.path2)
 		grid: Grid = backend.get_grid( \
 			gridConfig.k, \
 			gridConfig.anchor, \
@@ -70,9 +72,9 @@ class GridTest(): # (unittest.TestCase):
 if __name__ == '__main__':
 	gridTest = GridTest()
 
-	gridConfig = GridConfig1()
-	gridTest.write(gridConfig)
-	gridTest.read(gridConfig)
-
-	# gridConfig = GridConfig2()
+	# gridConfig = GridConfig1()
+	# gridTest.write(gridConfig)
 	# gridTest.read(gridConfig)
+
+	gridConfig = GridConfig2()
+	gridTest.read(gridConfig)
