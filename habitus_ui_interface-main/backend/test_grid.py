@@ -71,8 +71,8 @@ if __name__ == '__main__':
 	gridTest = GridTest()
 
 	gridConfig = GridConfig1()
-	# gridTest.write(gridConfig)
-	# gridTest.read(gridConfig)
-
-	gridConfig = GridConfig2()
+	gridTest.write(gridConfig)
 	gridTest.read(gridConfig)
+
+	# gridConfig = GridConfig2()
+	# gridTest.read(gridConfig)

@@ -24,7 +24,7 @@ class Corpus():
 		self.rows = rows
 
 		self.model = None
-		self.model_filename = "./process_files/glove.6B.300d.txt"
+		self.model_filename = "../../../process_files/glove.6B.300d.txt"
 		self.linguist = linguist
 		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all')
 		self.initialize(preexisting)

@@ -19,16 +19,16 @@ class Grid():
 		self.row_filename = row_filename
 		self.unique_filename = unique_filename
 
-		# self.documents = self.corpus.documents
-		# self.anchor = self.corpus.anchor
-		# self.rows = self.corpus.rows
-		# self.linguist = self.corpus.linguist
-		# self.trash = []
+		self.documents = self.corpus.documents
+		self.anchor = self.corpus.anchor
+		self.rows = self.corpus.rows
+		self.linguist = self.corpus.linguist
+		self.trash = []
 
-		# if clustering_algorithm == 'surdeanu':
-		# 	self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
-		# else:
-		# 	self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
+		if clustering_algorithm == 'surdeanu':
+			self.cluster_generator = Surdeanu2005(self.corpus, self.linguist)
+		else:
+			self.cluster_generator = SoftKMeans(self.corpus, self.linguist)
 
 	@classmethod
 	def generate(cls, path: str, supercorpus_filename: str,  row_filename: str, grid_filename: str, corpus: Corpus, k: int, clustering_algorithm: str):
