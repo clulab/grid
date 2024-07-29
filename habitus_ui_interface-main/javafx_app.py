@@ -51,8 +51,8 @@ class JavafxApp(FastAPI):
 #        self.processSupercorpus = processSupercorpus
 
         @self.get("/setSuperfiles/")
-        async def setSuperfiles(corpusFilename: str, rowFilename: str):
-            return self.frontend.backend.set_superfiles(corpusFilename, rowFilename)
+        async def setSuperfiles(corpusFilename: str, rowFilename: str, path: str):
+            return self.frontend.backend.set_superfiles(corpusFilename, rowFilename, path)
 
         # @self.get("/loadNewGrid/")
         # async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
