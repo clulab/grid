@@ -54,8 +54,8 @@ class JavafxBackend():
 		# self.row_contents = dict([(row_with_documents.row.name, row_with_documents.documents) for row_with_documents in self.rows_with_documents])
 		# This should be map of name to array of sentences
 		# Turn it into map to array of documents
-		self.set_superfiles("habitus.csv", "habitus_row_labels", dirname + "/")
-		self.get_initial_grid(k)
+		# self.set_superfiles("habitus.csv", "habitus_row_labels", dirname + "/")
+		# self.get_initial_grid(k)
 		print("This is a test.")
 	
 	def process_supercorpus(self, supercorpus_filepath):
