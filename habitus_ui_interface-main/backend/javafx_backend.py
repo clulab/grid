@@ -54,7 +54,7 @@ class JavafxBackend():
 		# self.row_contents = dict([(row_with_documents.row.name, row_with_documents.documents) for row_with_documents in self.rows_with_documents])
 		# This should be map of name to array of sentences
 		# Turn it into map to array of documents
-		self.set_superfiles("habitus", "habitus_row_labels", dirname + "/")
+		self.set_superfiles("habitus.csv", "habitus_row_labels", dirname + "/")
 		self.get_initial_grid(k)
 		print("This is a test.")
 	
@@ -68,7 +68,7 @@ class JavafxBackend():
 		# grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
 		# grid = Grid("path", "supercorpus_filename", "row_labels_filename", "unique_filename", None, 6, None, [])
 		# return grid
-		initial_grid = self.backend.get_grid(k, anchor="load_all", grid_filename="habitus", clustering_algorithm = "kmeans") -> Grid:
+		initial_grid = self.backend.get_grid(k, anchor="load_all", grid_filename="habitus", clustering_algorithm = "kmeans")
 		return initial_grid
 	
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:

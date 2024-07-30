@@ -17,7 +17,7 @@ class JavafxFrontend(Frontend):
         self.clicked_col = None
         self.clicked_row = None
         self.track_actions = {'actor': [], 'action':[], 'time': [], 'object_type': [], 'object_value': [], 'other_details': []}
-        self.backend = JavafxBackend(dirname, self.backend) # Replace the backend with a new one having access to the old.
+        self.backend = JavafxBackend(k, dirname, self.backend) # Replace the backend with a new one having access to the old.
         # self.backend = JavafxBackend(self.backend) # Replace the backend with a new one having access to the old.
         # self.grid = self.backend.get_initial_grid()
         backend = self.backend

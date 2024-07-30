@@ -8,9 +8,10 @@ from javafx_app import JavafxApp
 from backend.javafx_frontend import JavafxFrontend
 
 def getApp():
+    dirname = sys.argv[1]
+    k = 6 # int(sys.argv[2])
     app = JavafxApp(
-        frontend = JavafxFrontend(sys.argv[1], './process_files/', sys.argv[2], 'kmeans')
-        # frontend = JavafxFrontend('./process_files/', 6, 'kmeans')
+        frontend = JavafxFrontend(dirname, './process_files/', k, 'kmeans')
     )
     return app
 
