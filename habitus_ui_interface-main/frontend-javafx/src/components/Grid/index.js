@@ -70,10 +70,13 @@ export default function Grid() {
   }
 
   const handleSetKEnter = (event) => {
-    if (event.key === "Enter") {
-      // TODO: trim it, check for number and range
-      const k = event.target.value === '' ? 0 : event.target.value;
-      api.getSetK(k);
+    let k_str = event.target.value.trim()
+    if (event.key === "Enter" && k_str.length > 0) {
+      const k = k_str;
+      api.getSetK(k)
+      .then(() => {
+        event.target.blur();
+      })
     }
   }
 
