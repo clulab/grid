@@ -66,7 +66,7 @@ function createMainWindow() {
   // Load the application URL based on the environment
   win.loadURL(
     isDev
-      ? "http://localhost:3000"
+      ? "http://localhost:3001"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
 }
