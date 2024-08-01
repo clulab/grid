@@ -55,19 +55,17 @@ export default function Grid() {
   }
 
   const handleNewColumnEnter = (event) => {
-    if (event.key === "Enter") {
-      // TODO: trim it
-      if (event.target.value.length > 0) {
-        api.getTextInput(event.target.value)
-          .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-            setCorpus(clicked_sentences);
-            setGridRows(grid);
-            setColNumToName(col_names);
-            setFrozenColumns(frozen_columns)
-            event.target.value = '';
-            event.target.blur();
-          })
-      }
+    let col_name = event.target.value.trim()
+    if (event.key === "Enter" && col_name.length > 0) {
+      api.getTextInput(col_name)
+        .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+          setCorpus(clicked_sentences);
+          setGridRows(grid);
+          setColNumToName(col_names);
+          setFrozenColumns(frozen_columns)
+          event.target.value = '';
+          event.target.blur();
+        })
     }
   }
 

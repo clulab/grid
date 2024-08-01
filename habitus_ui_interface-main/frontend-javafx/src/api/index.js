@@ -105,7 +105,7 @@ export const api = {
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
-    const frozenColumns = json.frozenColumns;
+    const frozenColumns = json.frozen_columns;
 
     return [clickedSentences, grid, colNames, frozenColumns];
   }
