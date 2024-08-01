@@ -10,13 +10,13 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
   return (
     <td key={id}>
       <div style={{
-        color: colName.includes('Unassigned') ? '#616160' : (frozenColumns.includes(id) ? '#2c2c2c' : "#4767AC"),
+        color: colName.includes('unassigned') || colName.includes('all') ? '#616160' : (frozenColumns.includes(id) ? '#2c2c2c' : "#4767AC"),
         textAlign: "center",
         width: "6em",
         marginTop: 5,
         padding: 5,
         minHeight: 80,
-        cursor: colName.includes('Unassigned') ? 'default' : 'pointer'
+        cursor: colName.includes('unassigned') || colName.includes('all') ? 'default' : 'pointer'
       }}
         onMouseEnter={() => setShowButtons(true)}
         onMouseLeave={() => setShowButtons(false)}
@@ -40,7 +40,7 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               }}
             /> : colName}
         </div>
-        {!colName.includes('Unassigned') && showButtons && (
+        {!colName.includes('unassigned') && !colName.includes('all') && showButtons && (
           <div style={{ marginTop: 10, gap: 5, display: 'flex', justifyContent: 'center', }}>
             <Icon
               icon="akar-icons:edit"
