@@ -35,7 +35,6 @@ export default function ChangeCorpus() {
   };
 
   const onDrop = useCallback((acceptedFiles) => {
-    if (navigator.userAgent.includes("Mac")) {
     if (navigator.userAgent.includes("Mac") || navigator.userAgent.includes("Lin")) {
       const folderPaths = acceptedFiles.map((file) => {
         const parts = file.path.split("/").filter(Boolean);
