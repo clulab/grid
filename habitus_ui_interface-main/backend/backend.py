@@ -16,7 +16,8 @@ class Backend():
 		self.row_labels_filename = None
 		self.linguist = Linguist()
 
-	def process_supercorpus(self, supercorpus_filepath):
+	def process_supercorpus(self, supercorpus_filename):
+		supercorpus_filepath = self.path + supercorpus_filename
 		try:
 			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
 			temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
