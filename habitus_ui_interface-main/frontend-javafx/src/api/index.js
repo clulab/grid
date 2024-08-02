@@ -41,23 +41,27 @@ export const api = {
   },
   getData: async function() {
     const json = await fetchFromApi('/data/');
+    const rowName = json.row_name || "";
+    const colIndex = json.col_index || "";
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
     const rowContents = json.row_contents;
 
-    return [clickedSentences, grid, colNames, frozenColumns, rowContents];
+    return [clickedSentences, grid, colNames, frozenColumns, rowContents, rowName, colIndex];
   },
   getDeleteFrozenColumn: async function(id) {
     const query = toQuery([["id", id]]);
     const json = await fetchFromApi(`/deleteFrozenColumn/${query}`);
+    const rowName = json.row_name || "";
+    const colIndex = json.col_index || "";
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
 
-    return [clickedSentences, grid, colNames, frozenColumns];
+    return [clickedSentences, grid, colNames, frozenColumns, rowName, colIndex];
   },
   getDrag: async function(rowName, colName, text) {
     const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);

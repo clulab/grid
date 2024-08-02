@@ -23,7 +23,8 @@ export default function Grid() {
   useEffect(() => {
     setWaiting(true);
     api.getData()
-      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents]) => {
+      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, row_name, col_index]) => {
+        setActiveCell(row_name + col_index);
         setCorpus(clicked_sentences);
         setGridRows(grid);
         setColNumToName(col_names);
@@ -58,13 +59,8 @@ export default function Grid() {
     let col_name = event.target.value.trim()
     if (event.key === "Enter" && col_name.length > 0) {
       api.getTextInput(col_name)
-        .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-          // TODO: This cell activation is coordinated with the backend.
-          // Rather than coordination, it needs communication.
-          let row_name = "all"
-          let col_index = col_names.length - 3
-          let cell_id = row_name + col_index;
-          setActiveCell(cell_id);
+        .then(([clicked_sentences, grid, col_names, frozen_columns, row_name, col_index]) => {
+          setActiveCell(row_name + col_index);
           setCorpus(clicked_sentences);
           setGridRows(grid);
           setColNumToName(col_names);
@@ -134,8 +130,11 @@ export default function Grid() {
           setColNumToName(col_names);
           setFrozenColumns(frozen_columns);
         }}
-        onDeleteFrozen={(clicked_sentences, grid, col_names, frozen_columns) => {
-          activateCell(null); // deactivate potentially active cell
+        onDeleteFrozen={(clicked_sentences, grid, col_names, frozen_columns, row_name, col_index) => {
+          if (row_name && col_index)
+            activateCell(row_name + col_index);
+          else
+            activateCell(null); // deactivate potentially active cell
           setCorpus(clicked_sentences);
           setGridRows(grid);
           setColNumToName(col_names);

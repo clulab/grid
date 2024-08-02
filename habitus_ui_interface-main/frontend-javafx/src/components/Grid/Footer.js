@@ -60,8 +60,8 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
                 color={hoverDelete ? "#DC3545" : "#616160"}
                 onClick={(event) => {
                   api.getDeleteFrozenColumn(id)
-                    .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-                      onDeleteFrozen(clicked_sentences, grid, col_names, frozen_columns)
+                    .then(([clicked_sentences, grid, col_names, frozen_columns, row_name, col_index]) => {
+                      onDeleteFrozen(clicked_sentences, grid, col_names, frozen_columns, row_name, col_index)
                     })
                 }}
                 onMouseEnter={() => setHoverDelete(true)}
