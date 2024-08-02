@@ -59,6 +59,12 @@ export default function Grid() {
     if (event.key === "Enter" && col_name.length > 0) {
       api.getTextInput(col_name)
         .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
+          // TODO: This cell activation is coordinated with the backend.
+          // Rather than coordination, it needs communication.
+          let row_name = "all"
+          let col_index = col_names.length - 3
+          let cell_id = row_name + col_index;
+          setActiveCell(cell_id);
           setCorpus(clicked_sentences);
           setGridRows(grid);
           setColNumToName(col_names);
@@ -129,6 +135,7 @@ export default function Grid() {
           setFrozenColumns(frozen_columns);
         }}
         onDeleteFrozen={(clicked_sentences, grid, col_names, frozen_columns) => {
+          activateCell(null); // deactivate potentially active cell
           setCorpus(clicked_sentences);
           setGridRows(grid);
           setColNumToName(col_names);
