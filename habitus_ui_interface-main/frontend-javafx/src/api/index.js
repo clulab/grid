@@ -26,55 +26,58 @@ export const api = {
 
     return [message];
   },
-  getClick: async function(rowName, colName) {
-    const query = toQuery([["row", rowName], ["col", colName]]);
-    const json = await fetchFromApi(`/click/${query}`);
+  getClick: async function(rowIndex, colIndex) {
+    const query = toQuery([["rowIndex", rowIndex], ["colIndex", colIndex]]);
+    const json = await fetchFromApi(`/click${query}`);
     const clickedSentences = json
 
     return [clickedSentences];
   },
   getCopyToggle: async function() {
-    const json = await fetchFromApi(`/copyToggle/`);
+    const json = await fetchFromApi(`/copyToggle`);
     const copyOn = json;
 
     return [copyOn];
   },
   getData: async function() {
-    const json = await fetchFromApi('/data/');
-    const rowName = json.row_name || "";
-    const colIndex = json.col_index || "";
+    const json = await fetchFromApi('/data');
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
     const rowContents = json.row_contents;
 
-    return [clickedSentences, grid, colNames, frozenColumns, rowContents, rowName, colIndex];
+    const rowIndexString = json.row_index || "-1";
+    const colIndexString = json.col_index || "-1";
+    const rowIndex = parseInt(rowIndexString);
+    const colIndex = parseInt(colIndexString);
+
+    return [clickedSentences, grid, colNames, frozenColumns, rowContents, rowIndex, colIndex];
   },
-  getDeleteFrozenColumn: async function(id) {
-    const query = toQuery([["id", id]]);
-    const json = await fetchFromApi(`/deleteFrozenColumn/${query}`);
-    const rowName = json.row_name || "";
-    const colIndex = json.col_index || "";
+  getDeleteFrozenColumn: async function(colIndex) {
+    const query = toQuery([["colIndex", colIndex]]);
+    const json = await fetchFromApi(`/deleteFrozenColumn${query}`);
+    const newRowIndex = json.row_index;
+    const newColIndex = json.col_index;
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
 
-    return [clickedSentences, grid, colNames, frozenColumns, rowName, colIndex];
+    return [clickedSentences, grid, colNames, frozenColumns, newRowIndex, newColIndex];
   },
-  getDrag: async function(rowName, colName, text) {
-    const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);
-    const json = await fetchFromApi(`/drag/${query}`);
+  getDrag: async function(colIndex, sentenceIndex) {
+    const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
+    const json = await fetchFromApi(`/drag${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
 
     return [clickedSentences, grid, colNames];
   },
-  getEditName: async function(id, name) {
-    const query = toQuery([["id", id], ["name", name]]);
-    const json = await fetchFromApi(`/editName/${query}`);
+  getEditName: async function(colIndex, name) {
+    const query = toQuery([["colIndex", colIndex], ["name", name]]);
+    const json = await fetchFromApi(`/editName${query}`);
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
@@ -82,7 +85,7 @@ export const api = {
     return [grid, colNames, frozenColumns];
   },
   getRegenerate: async function() {
-    const json = await fetchFromApi(`/regenerate/`);
+    const json = await fetchFromApi(`/regenerate`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;
@@ -90,22 +93,22 @@ export const api = {
 
     return [clickedSentences, grid, colNames, frozenColumns];
   },
-  getSentenceClick: async function(text) {
-    const query = toQuery([["text", text]]);
-    const json = await fetchFromApi(`/sentenceClick/${query}`);
+  getSentenceClick: async function(sentenceIndex) {
+    const query = toQuery([["sentence_index", sentenceIndex]]);
+    const json = await fetchFromApi(`/sentenceClick${query}`);
     const newText = json;
 
     return [newText];
   },
   getSetK: async function(k) {
-    const query = toQuery([["k", k]]);
-    /*const json =*/ await fetchFromApi(`/setK/${query}`);
+    const query = toQuery([["k", k.toString()]]);
+    /*const json =*/ await fetchFromApi(`/setK${query}`);
 
     return [];
   },
-  getTextInput: async function(text) {
-    const query = toQuery([["text", text]]);
-    const json = await fetchFromApi(`/textInput/${query}`);
+  getTextInput: async function(colQuery) {
+    const query = toQuery([["colQuery", colQuery]]);
+    const json = await fetchFromApi(`/textInput${query}`);
     const clickedSentences = json.clicked_sentences;
     const grid = json.grid;
     const colNames = json.col_names;

@@ -9,7 +9,7 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 
 export default function Grid() {
-  const [activeCell, setActiveCell] = useState()
+  const [activeCell, setActiveCell] = useState([])
   const [editColName, setEditColName] = useState(false)
   const [corpus, setCorpus] = useState([]);
   const [context, setContext] = useState([]);
@@ -23,13 +23,13 @@ export default function Grid() {
   useEffect(() => {
     setWaiting(true);
     api.getData()
-      .then(([clicked_sentences, grid, col_names, frozen_columns, row_contents, row_name, col_index]) => {
-        setActiveCell(row_name + col_index);
-        setCorpus(clicked_sentences);
+      .then(([clickedSentences, grid, colNames, frozenColumns, rowContents, rowIndex, colIndex]) => {
+        setCorpus(clickedSentences);
         setGridRows(grid);
-        setColNumToName(col_names);
-        setFrozenColumns(frozen_columns);
-        setRowContents(row_contents);
+        setColNumToName(colNames);
+        setFrozenColumns(frozenColumns);
+        setRowContents(rowContents);
+        setActiveCell([rowIndex, colIndex]);
         setWaiting(false);
       });
   }, [])
@@ -46,25 +46,25 @@ export default function Grid() {
     event.preventDefault();
     setWaiting(true)
     api.getRegenerate()
-      .then(([clicked_sentences, grid, col_names, frozen_columns]) => {
-        setCorpus(clicked_sentences);
+      .then(([clickedSentences, grid, colNames, frozenColumns]) => {
+        setCorpus(clickedSentences);
         setGridRows(grid);
-        setColNumToName(col_names);
-        setFrozenColumns(frozen_columns);
+        setColNumToName(colNames);
+        setFrozenColumns(frozenColumns);
         setWaiting(false);
       });
   }
 
   const handleNewColumnEnter = (event) => {
-    let col_name = event.target.value.trim()
-    if (event.key === "Enter" && col_name.length > 0) {
-      api.getTextInput(col_name)
-        .then(([clicked_sentences, grid, col_names, frozen_columns, row_name, col_index]) => {
-          setActiveCell(row_name + col_index);
-          setCorpus(clicked_sentences);
+    const colQuery = event.target.value.trim()
+    if (event.key === "Enter" && colQuery.length > 0) {
+      api.getTextInput(colQuery)
+        .then(([clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex]) => {
+          setCorpus(clickedSentences);
           setGridRows(grid);
-          setColNumToName(col_names);
-          setFrozenColumns(frozen_columns)
+          setColNumToName(colNames);
+          setFrozenColumns(frozenColumns);
+          setActiveCell([rowIndex, colIndex]);
           event.target.value = '';
           event.target.blur();
         })
@@ -72,9 +72,9 @@ export default function Grid() {
   }
 
   const handleSetKEnter = (event) => {
-    let k_str = event.target.value.trim()
-    if (event.key === "Enter" && k_str.length > 0) {
-      const k = k_str;
+    const kStr = event.target.value.trim();
+    const k = parseInt(kStr);
+    if (event.key === "Enter" && !isNaN(k)) {
       api.getSetK(k)
       .then(() => {
         event.target.blur();
@@ -97,10 +97,10 @@ export default function Grid() {
         }
       }
       onDrop={
-        (clicked_sentences, grid, col_names) => {
-          setCorpus(clicked_sentences);
+        (clickedSentences, grid, colNames) => {
+          setCorpus(clickedSentences);
           setGridRows(grid);
-          setColNumToName(col_names);
+          setColNumToName(colNames);
           setContext([])
         }
       }
@@ -125,20 +125,17 @@ export default function Grid() {
         editColName={editColName}
         setEditColName={setEditColName}
         frozenColumns={frozenColumns}
-        onFooter={(grid, col_names, frozen_columns) => {
+        onFooter={(grid, colNames, frozenColumns) => {
           setGridRows(grid);
-          setColNumToName(col_names);
-          setFrozenColumns(frozen_columns);
+          setColNumToName(colNames);
+          setFrozenColumns(frozenColumns);
         }}
-        onDeleteFrozen={(clicked_sentences, grid, col_names, frozen_columns, row_name, col_index) => {
-          if (row_name && col_index)
-            activateCell(row_name + col_index);
-          else
-            activateCell(null); // deactivate potentially active cell
-          setCorpus(clicked_sentences);
+        onDeleteFrozen={(clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex) => {
+          setCorpus(clickedSentences);
           setGridRows(grid);
-          setColNumToName(col_names);
-          setFrozenColumns(frozen_columns);
+          setColNumToName(colNames);
+          setFrozenColumns(frozenColumns);
+          activateCell([rowIndex, colIndex]);
         }}
       />
     )
