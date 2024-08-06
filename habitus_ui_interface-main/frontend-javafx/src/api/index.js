@@ -110,8 +110,10 @@ export const api = {
     const grid = json.grid;
     const colNames = json.col_names;
     const frozenColumns = json.frozen_columns;
+    const rowName = json.row_name;
+    const colIndex = json.col_index;
 
-    return [clickedSentences, grid, colNames, frozenColumns];
+    return [clickedSentences, grid, colNames, frozenColumns, rowName, colIndex];
   }
 }
 
