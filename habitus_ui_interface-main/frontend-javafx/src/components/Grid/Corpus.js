@@ -17,7 +17,9 @@ function Sentence({ text, onChange, activateSentence, isActive }) {
       onDrag={(event) => { activateSentence() }}
       style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
       onClick={(event) => {
-        api.getSentenceClick(text)
+        const text = event.target
+
+        api.clickSentence(text.id)
           .then(([text]) => { // TODO: what does this return?
             if (isActive) {
               activateSentence();

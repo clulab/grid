@@ -2,15 +2,15 @@ import { useState } from "react"
 import { Icon } from "@iconify/react"
 import { api } from "api"
 
-export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
+export default function Footer({ colIndex, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
   const [showButtons, setShowButtons] = useState(false)
   const [hoverEdit, setHoverEdit] = useState(false)
   const [hoverDelete, setHoverDelete] = useState(false)
 
   return (
-    <td key={id}>
+    <td key={colIndex}>
       <div style={{
-        color: colName.includes('unassigned') || colName.includes('all') ? '#616160' : (frozenColumns.includes(id) ? '#2c2c2c' : "#4767AC"),
+        color: colName.includes('unassigned') || colName.includes('all') ? '#616160' : (frozenColumns.includes(colIndex) ? '#2c2c2c' : "#4767AC"),
         textAlign: "center",
         width: "6em",
         marginTop: 5,
@@ -22,16 +22,16 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
         onMouseLeave={() => setShowButtons(false)}
       >
         <div>
-          {editColName === id ?
+          {editColName === colIndex ?
             <input
               placeholder={colName}
               className="footer"
               style={{ '--placeholder-color': 'gray' }}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
-                  api.getEditName(id, event.target.value)
-                    .then(([grid, col_names, frozen_columns]) => {
-                      onFooter(grid, col_names, frozen_columns);
+                  api.modColumn(colIndex, event.target.value)
+                    .then(([grid, colNames, frozenColumns]) => {
+                      onFooter(grid, colNames, frozenColumns);
                       setEditColName('');
                       event.target.value = ''
                       event.target.blur()
@@ -47,21 +47,21 @@ export default function Footer({ id, colName, frozenColumns, onFooter, onDeleteF
               width="20" height="20"
               color={hoverEdit ? "#2c2c2c" : "#616160"}
               onClick={() => {
-                if (editColName === id) setEditColName('')
-                else setEditColName(id)
+                if (editColName === colIndex) setEditColName('')
+                else setEditColName(colIndex)
               }}
               onMouseEnter={() => setHoverEdit(true)}
               onMouseLeave={() => setHoverEdit(false)}
             />
-            {frozenColumns.includes(id) &&
+            {frozenColumns.includes(colIndex) &&
               <Icon
                 icon="octicon:trash-16"
                 width="19" height="20"
                 color={hoverDelete ? "#DC3545" : "#616160"}
                 onClick={(event) => {
-                  api.getDeleteFrozenColumn(id)
-                    .then(([clicked_sentences, grid, col_names, frozen_columns, row_name, col_index]) => {
-                      onDeleteFrozen(clicked_sentences, grid, col_names, frozen_columns, row_name, col_index)
+                  api.delColumn(colIndex)
+                    .then(([clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex]) => {
+                      onDeleteFrozen(clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex)
                     })
                 }}
                 onMouseEnter={() => setHoverDelete(true)}

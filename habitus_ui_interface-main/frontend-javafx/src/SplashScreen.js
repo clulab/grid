@@ -9,7 +9,7 @@ export default function SplashScreen({ apiurl }) {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    api.getBackendReady()
+    api.getReady()
       .then(([message]) => {
         if (message === 'Backend is ready!')
           setBackendReady(true);

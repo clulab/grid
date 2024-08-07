@@ -10,7 +10,6 @@ export default function GridRow({ rowName, rowContents, data, onChange, onDrop, 
         key={identifier}
         id={identifier}
         colorValue={v}
-        rowName={rowName}
         rowIndex={ix}
         rowContents={rowContents}
         colIndex={colIndex}

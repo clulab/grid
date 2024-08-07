@@ -22,7 +22,7 @@ export default function Grid() {
 
   useEffect(() => {
     setWaiting(true);
-    api.getData()
+    api.getGrid()
       .then(([clickedSentences, grid, colNames, frozenColumns, rowContents, rowIndex, colIndex]) => {
         setCorpus(clickedSentences);
         setGridRows(grid);
@@ -36,7 +36,7 @@ export default function Grid() {
 
   const handleCopyButtonClicked = (event) => {
     event.preventDefault();
-    api.getCopyToggle()
+    api.togCopy()
       .then(([copyOn]) => {
         setCopying(copyOn);
       })
@@ -45,7 +45,7 @@ export default function Grid() {
   const handleRegenerateButtonClicked = (event) => {
     event.preventDefault();
     setWaiting(true)
-    api.getRegenerate()
+    api.newGrid()
       .then(([clickedSentences, grid, colNames, frozenColumns]) => {
         setCorpus(clickedSentences);
         setGridRows(grid);
@@ -58,7 +58,7 @@ export default function Grid() {
   const handleNewColumnEnter = (event) => {
     const colQuery = event.target.value.trim()
     if (event.key === "Enter" && colQuery.length > 0) {
-      api.getTextInput(colQuery)
+      api.addColumn(colQuery)
         .then(([clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex]) => {
           setCorpus(clickedSentences);
           setGridRows(grid);
@@ -75,7 +75,7 @@ export default function Grid() {
     const kStr = event.target.value.trim();
     const k = parseInt(kStr);
     if (event.key === "Enter" && !isNaN(k)) {
-      api.getSetK(k)
+      api.setK(k)
       .then(() => {
         event.target.blur();
       })
