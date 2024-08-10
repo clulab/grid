@@ -19,14 +19,14 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
       style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
       onClick={(event) => {
         api.clickSentence(sentence.index)
-          .then(([text]) => { // TODO: what does this return?
+          .then(([preContext, text, postContext]) => {
             if (isActive) {
               activateSentenceIndex(-1);
-              onChange([]);
+              onChange(null, null, null);
             }
             else {
               activateSentenceIndex(sentence.index);
-              onChange(text);
+              onChange(preContext, text, postContext);
             }
           });
       }}

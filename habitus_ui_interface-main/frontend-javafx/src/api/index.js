@@ -73,11 +73,12 @@ export const api = {
   clickSentence: async function(sentenceIndex) {
     const query = toQuery([["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/clickSentence${query}`);
-    const newText = json;
+    const [preContext, text, postContext] = json;
 
-    return [newText];
+    return [preContext, text, postContext];
   },
   dragSentence: async function(colIndex, sentenceIndex) {
+    console.info("colIndex " + colIndex + " sentenceIndex " + sentenceIndex);
     const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/dragSentence${query}`);
     const [grid, , colNames, clickedSentences, , , , ] = destructureGrid(json)

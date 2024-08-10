@@ -200,8 +200,8 @@ export function Grid() {
         <Sentences
           clickedSentences={clickedSentences}
           context={context}
-          onChangeContext={(text) => {
-            setContext(text);
+          onChangeContext={(preContext, text, postContext) => {
+            setContext([preContext, text, postContext]);
           }}
         />
       </DndProvider>

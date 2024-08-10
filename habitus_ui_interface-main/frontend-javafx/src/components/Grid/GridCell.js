@@ -32,13 +32,13 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
   const [{ isOver }, dropRef] = useDrop({
     accept: 'sentence',
     drop: (item) => {
-      api.dragSentence(colIndex, item.ix) // TODO: How to get sentence index
+      api.dragSentence(colIndex, item.sentence.index)
         .then(([clickedSentences, grid, colNames]) => {
           onDrop(clickedSentences, grid, colNames)
         })
     },
     collect: (monitor) => ({
-      isOver: monitor.isOver() && matches(monitor)
+      isOver: monitor.isOver() && true // matches(monitor)
     })
   })
 
