@@ -17,7 +17,7 @@ export function Grid() {
   const [colNames, setColNames] = useState([]);
   const [clickedSentences, setClickedSentences] = useState([]);
   const [frozenColumns, setFrozenColumns] = useState([]);
-  const [rowContents, setRowContents] = useState({});
+  const [cellContents, setCellContents] = useState({});
   const [activeCell, setActiveCell] = useState([]);
 
   const [editColIndex, setEditColIndex] = useState(-1);
@@ -29,13 +29,13 @@ export function Grid() {
     setActiveCell([rowIndex, colIndex]);
   }
 
-  function saveGrid([grid, rowNames, colNames, clickedSentences, frozenColumns, rowContents, rowIndex, colIndex]) {
+  function saveGrid([grid, rowNames, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) {
     setGrid(grid);
     setRowNames(rowNames);
     setColNames(colNames);
     setClickedSentences(clickedSentences);
     setFrozenColumns(frozenColumns);
-    setRowContents(rowContents);
+    setCellContents(cellContents);
     activateCell(rowIndex, colIndex);
   }
 
@@ -65,14 +65,8 @@ export function Grid() {
     const colQuery = event.target.value.trim()
     if (event.key === "Enter" && colQuery.length > 0) {
       api.addColumn(colQuery)
-        .then(([grid, rowNames, colNames, clickedSentences, frozenColumns, rowIndex, colIndex]) => {
-          setGrid(grid);
-          setRowNames(rowNames);
-          setColNames(colNames);         
-          setClickedSentences(clickedSentences);
-          setFrozenColumns(frozenColumns);
-          // Is rowContents not changed here?
-          setActiveCell([rowIndex, colIndex]);
+        .then((gridStructure) => {
+          saveGrid(gridStructure);
           event.target.value = '';
           event.target.blur();
         })
@@ -103,8 +97,9 @@ export function Grid() {
     <GridRow
       key={"row-" + rowIndex.toString()}
       rowIndex={rowIndex}
-      rowContents={rowContents[rowIndex]}
+      rowName={rowNames[rowIndex]}
       gridRow={gridRow}
+      rowContents={cellContents[rowIndex]}
       onChange={
         (clickedSentences) => {
           setClickedSentences(clickedSentences);

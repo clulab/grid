@@ -2,7 +2,7 @@ import { api } from "api"
 
 import { useDrop } from "react-dnd"
 
-export function GridCell({rowIndex, colIndex, rowContents, colorValue, onChange, onDrop, activateCell, isActive}) {
+export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorValue, onChange, onDrop, activateCell, isActive}) {
   const gradientArray = [
     '#e7ebee', '#cce6fe', '#98bde5', '#6c9acc', '#508acc', '#337acc', '#0069cc', '#0069cc', '#0d62c2', '#145bb8',
     '#1854ae', '#1a4ca4', '#2258c2', '#234fb6', '#2247aa', '#213f9f', '#203793', '#1e2f88', '#1b277d', '#182071',
@@ -18,6 +18,17 @@ export function GridCell({rowIndex, colIndex, rowContents, colorValue, onChange,
     '#020236', '#020236', '#020236', '#020236', '#020236', '#020236', '#020236'
   ];
   const color = gradientArray[Math.ceil(colorValue * 100)];
+
+  function matches(monitor) {
+    const item = monitor.getItem();
+    console.info("monitor item is " + item);
+
+    const inCellContents = cellContents.includes(monitor.getItem().index);
+    const inRowContents = rowContents.includes(monitor.getItem().index);
+
+    return !inCellContents && inRowContents; 
+  }
+
   const [{ isOver }, dropRef] = useDrop({
     accept: 'sentence',
     drop: (item) => {
@@ -27,7 +38,7 @@ export function GridCell({rowIndex, colIndex, rowContents, colorValue, onChange,
         })
     },
     collect: (monitor) => ({
-      isOver: monitor.isOver() && rowContents.includes(monitor.getItem().text)
+      isOver: monitor.isOver() && matches(monitor)
     })
   })
 

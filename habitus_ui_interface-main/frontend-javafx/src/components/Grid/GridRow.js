@@ -1,12 +1,13 @@
 import { GridCell } from "./GridCell"
 
-export function GridRow({rowIndex, rowContents, gridRow, onChange, onDrop, activateCell, activeCell}) {
+export function GridRow({rowIndex, rowName, gridRow, rowContents, onChange, onDrop, activateCell, activeCell}) {
   const cells = gridRow.map((colorValue, colIndex) =>
     <GridCell
       key={"row-" + rowIndex.toString() + " col-" + colIndex.toString()}
       rowIndex={rowIndex}
       colIndex={colIndex}
-      rowContents={rowContents}
+      cellContents={rowContents[colIndex]}
+      rowContents={rowContents[rowContents.length - 1]}
       colorValue={colorValue}
       onChange={onChange}
       onDrop={onDrop}
@@ -17,7 +18,7 @@ export function GridRow({rowIndex, rowContents, gridRow, onChange, onDrop, activ
 
   return (<tr>
     <td className="row-name">
-      {rowContents.name}
+      {rowName}
     </td>
     {cells}
   </tr>)
