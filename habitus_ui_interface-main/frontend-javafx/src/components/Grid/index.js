@@ -20,7 +20,7 @@ export function Grid() {
   const [rowContents, setRowContents] = useState({});
   const [activeCell, setActiveCell] = useState([]);
 
-  const [editColName, setEditColName] = useState(false);
+  const [editColIndex, setEditColIndex] = useState(-1);
   const [context, setContext] = useState([]);
   const [copying, setCopying] = useState(false);
   const [waiting, setWaiting] = useState(false);
@@ -130,6 +130,7 @@ export function Grid() {
       colIndex={colIndex}
       colName={colName}
       frozenColumns={frozenColumns}
+      isCalculated={colIndex === colNames.length - 1 || colIndex === colNames.length - 2}
       onFooter={(grid, colNames, frozenColumns) => {
         setGrid(grid);
         setColNames(colNames);
@@ -142,8 +143,8 @@ export function Grid() {
         setFrozenColumns(frozenColumns);
         activateCell([rowIndex, colIndex]);
       }}
-      editColName={editColName}
-      setEditColName={setEditColName}
+      editColIndex={editColIndex}
+      setEditColIndex={setEditColIndex}
     />
   );
 
@@ -202,7 +203,7 @@ export function Grid() {
           </div>
         </div>
         <Sentences
-          corpus={clickedSentences}
+          clickedSentences={clickedSentences}
           context={context}
           onChangeContext={(text) => {
             setContext(text);

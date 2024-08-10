@@ -46,7 +46,7 @@ export function GridCell({rowIndex, colIndex, rowContents, colorValue, onChange,
         api.clickCell(rowIndex, colIndex)
           .then(([clickedSentences]) => {
             onChange(clickedSentences);
-            activateCell([rowIndex,]);
+            activateCell(rowIndex, colIndex);
           })
       }}
     >

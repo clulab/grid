@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import './SplashScreen.css';
 
-export function SplashScreen({ apiurl }) {
+export function SplashScreen() {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
@@ -17,7 +17,7 @@ export function SplashScreen({ apiurl }) {
         else
           setTimeout(checkBackendReady, 5000);
       })
-      .catch((error) => {
+      .catch((_) => {
         setTimeout(checkBackendReady, 5000);
       });
   }
