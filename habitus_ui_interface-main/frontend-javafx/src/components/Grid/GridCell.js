@@ -19,16 +19,6 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
   ];
   const color = gradientArray[Math.ceil(colorValue * 100)];
 
-  function matches(monitor) {
-    const item = monitor.getItem();
-    console.info("monitor item is " + item);
-
-    const inCellContents = cellContents.includes(monitor.getItem().index);
-    const inRowContents = rowContents.includes(monitor.getItem().index);
-
-    return !inCellContents && inRowContents; 
-  }
-
   const [{ isOver }, dropRef] = useDrop({
     accept: 'sentence',
     drop: (item) => {
@@ -37,8 +27,19 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
           onDrop(clickedSentences, grid, colNames)
         })
     },
+    canDrop: (item) => {
+      console.info("monitor is " + JSON.stringify(item));
+      const sentenceIndex = item.sentence.index;
+      console.info("Trying to match sentenceIndex " + sentenceIndex);
+   
+      const inCellContents = cellContents.includes(sentenceIndex);
+      const inRowContents = rowContents.includes(sentenceIndex);
+  
+      return !inCellContents && inRowContents; 
+    },
     collect: (monitor) => ({
-      isOver: monitor.isOver() && true // matches(monitor)
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop()
     })
   })
 
