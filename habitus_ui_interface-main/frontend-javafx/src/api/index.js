@@ -29,9 +29,10 @@ function toQuery(namesAndValues) {
 }
 
 function destructureGrid(json) {
-  const clickedSentences = json.clickedSentences;
   const grid = json.grid;
+  const rowNames = json.rowNames;
   const colNames = json.colNames;
+  const clickedSentences = json.clickedSentences;
   const frozenColumns = json.frozenColumns;
   const rowContents = json.rowContents;
   const rowIndexString = json.rowIndex || "-1";
@@ -39,9 +40,8 @@ function destructureGrid(json) {
   const rowIndex = parseInt(rowIndexString);
   const colIndex = parseInt(colIndexString);
 
-  return [clickedSentences, grid, colNames, frozenColumns, rowContents, rowIndex, colIndex];
+  return [grid, rowNames, colNames, clickedSentences, frozenColumns, rowContents, rowIndex, colIndex];
 }
-
 
 export const api = {
   getReady: async function() {
@@ -58,9 +58,9 @@ export const api = {
   },
   newGrid: async function() {
     const json = await fetchForApi(`/newGrid`);
-    const [clickedSentences, grid, colNames, frozenColumns, , , ] = destructureGrid(json)
+    const [grid, rowNames, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
 
-    return [clickedSentences, grid, colNames, frozenColumns];
+    return [grid, rowNames, colNames, clickedSentences, frozenColumns];
   },
 
   clickCell: async function(rowIndex, colIndex) {
@@ -88,7 +88,7 @@ export const api = {
   addColumn: async function(colQuery) {
     const query = toQuery([["colQuery", colQuery]]);
     const json = await fetchForApi(`/addColumn${query}`);
-    const [clickedSentences, grid, colNames, frozenColumns, , , ] = destructureGrid(json)
+    const [grid, rowNames, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
 
     return [clickedSentences, grid, colNames, frozenColumns];
   },
@@ -114,8 +114,8 @@ export const api = {
     return [];
   },
 
-  togCopy: async function() {
-    const json = await fetchForApi(`/togCopy`);
+  togMode: async function() {
+    const json = await fetchForApi(`/togMode`);
     const copyOn = json;
 
     return [copyOn];

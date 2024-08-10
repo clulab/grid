@@ -1,7 +1,8 @@
-import { Grid } from 'components';
-import './styles.css';
+import { Grid } from "components";
 
-function GridPage() {
+import "./styles.css";
+
+export function GridPage() {
 
   return (
     <div>
@@ -9,5 +10,3 @@ function GridPage() {
     </div >
   );
 }
-
-export default GridPage;

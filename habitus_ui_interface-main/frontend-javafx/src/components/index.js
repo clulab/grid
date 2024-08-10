@@ -1,7 +1,8 @@
-import Header from './Header'
-import Button from './Button'
-import Input from './Input'
-import Loading from './Loading'
-import Grid from './Grid'
+import { Button } from "./Button"
+import { Grid } from "./Grid"
+import { Header } from "./Header"
+import { Input } from "./Input"
+import { Loading } from "./Loading"
 
-export { Header, Button, Input, Loading, Grid }
+
+export { Button, Grid, Header, Input, Loading }

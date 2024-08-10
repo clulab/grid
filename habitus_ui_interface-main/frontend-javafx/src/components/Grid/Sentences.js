@@ -1,8 +1,8 @@
-import Corpus from "./Corpus"
+import { Corpus } from "./Corpus"
 
-export default function Sentences ({ corpus, context, onChangeContext }) {
+export function Sentences ({ clickedSentences, context, onChangeContext }) {
   return (
-    corpus && corpus.length > 0 && (
+    clickedSentences && clickedSentences.length > 0 && (
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
         <div style={{ width: '48%' }}>
           <h2 style={{
@@ -10,7 +10,7 @@ export default function Sentences ({ corpus, context, onChangeContext }) {
             color: '#2c2c2c'
           }}>Sentences</h2>
           <Corpus
-            sentences={corpus}
+            sentences={clickedSentences}
             onChange={onChangeContext}
           />
         </div>

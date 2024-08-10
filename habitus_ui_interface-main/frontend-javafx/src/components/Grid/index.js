@@ -1,69 +1,77 @@
-import { useState, useEffect } from "react"
-import { api } from "api"
-import "./styles.css"
-import Sentences from "./Sentences"
-import { Button, Input, Loading, } from 'components';
-import GridRow from "./GridRow"
-import Footer from "./Footer"
-import { DndProvider } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
+import { Footer }  from "./Footer";
+import { GridRow } from "./GridRow";
+import { Sentences } from "./Sentences";
 
-export default function Grid() {
-  const [activeCell, setActiveCell] = useState([])
-  const [editColName, setEditColName] = useState(false)
-  const [corpus, setCorpus] = useState([]);
+import { api } from "api";
+import { Button, Input, Loading, } from "components";
+
+import { useState, useEffect } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
+import "./styles.css";
+
+export function Grid() {
+  const [grid, setGrid] = useState({});
+  const [rowNames, setRowNames] = useState([]);
+  const [colNames, setColNames] = useState([]);
+  const [clickedSentences, setClickedSentences] = useState([]);
+  const [frozenColumns, setFrozenColumns] = useState([]);
+  const [rowContents, setRowContents] = useState({});
+  const [activeCell, setActiveCell] = useState([]);
+
+  const [editColName, setEditColName] = useState(false);
   const [context, setContext] = useState([]);
-  const [gridRows, setGridRows] = useState({})
-  const [colNumToName, setColNumToName] = useState({})
-  const [frozenColumns, setFrozenColumns] = useState([])
-  const [rowContents, setRowContents] = useState({})
   const [copying, setCopying] = useState(false);
-  const [waiting, setWaiting] = useState(false)
+  const [waiting, setWaiting] = useState(false);
 
-  useEffect(() => {
-    setWaiting(true);
-    api.getGrid()
-      .then(([clickedSentences, grid, colNames, frozenColumns, rowContents, rowIndex, colIndex]) => {
-        setCorpus(clickedSentences);
-        setGridRows(grid);
-        setColNumToName(colNames);
-        setFrozenColumns(frozenColumns);
-        setRowContents(rowContents);
-        setActiveCell([rowIndex, colIndex]);
-        setWaiting(false);
-      });
-  }, [])
+  function activateCell(rowIndex, colIndex) {
+    setActiveCell([rowIndex, colIndex]);
+  }
 
-  const handleCopyButtonClicked = (event) => {
+  function saveGrid([grid, rowNames, colNames, clickedSentences, frozenColumns, rowContents, rowIndex, colIndex]) {
+    setGrid(grid);
+    setRowNames(rowNames);
+    setColNames(colNames);
+    setClickedSentences(clickedSentences);
+    setFrozenColumns(frozenColumns);
+    setRowContents(rowContents);
+    activateCell(rowIndex, colIndex);
+  }
+
+  function handleCopyButtonClicked(event) {
     event.preventDefault();
-    api.togCopy()
+    api.togMode()
       .then(([copyOn]) => {
         setCopying(copyOn);
       })
   }
 
-  const handleRegenerateButtonClicked = (event) => {
+  function handleRegenerateButtonClicked(event) {
     event.preventDefault();
     setWaiting(true)
     api.newGrid()
-      .then(([clickedSentences, grid, colNames, frozenColumns]) => {
-        setCorpus(clickedSentences);
-        setGridRows(grid);
-        setColNumToName(colNames);
+      .then(([grid, rowNames, colNames, clickedSentences, frozenColumns]) => {
+        setGrid(grid);
+        setRowNames(rowNames);
+        setColNames(colNames);
+        setClickedSentences(clickedSentences);
         setFrozenColumns(frozenColumns);
         setWaiting(false);
       });
   }
 
-  const handleNewColumnEnter = (event) => {
+  function handleNewColumnEnter(event) {
     const colQuery = event.target.value.trim()
     if (event.key === "Enter" && colQuery.length > 0) {
       api.addColumn(colQuery)
-        .then(([clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex]) => {
-          setCorpus(clickedSentences);
-          setGridRows(grid);
-          setColNumToName(colNames);
+        .then(([grid, rowNames, colNames, clickedSentences, frozenColumns, rowIndex, colIndex]) => {
+          setGrid(grid);
+          setRowNames(rowNames);
+          setColNames(colNames);         
+          setClickedSentences(clickedSentences);
           setFrozenColumns(frozenColumns);
+          // Is rowContents not changed here?
           setActiveCell([rowIndex, colIndex]);
           event.target.value = '';
           event.target.blur();
@@ -71,7 +79,7 @@ export default function Grid() {
     }
   }
 
-  const handleSetKEnter = (event) => {
+  function handleSetKEnter(event) {
     const kStr = event.target.value.trim();
     const k = parseInt(kStr);
     if (event.key === "Enter" && !isNaN(k)) {
@@ -82,25 +90,32 @@ export default function Grid() {
     }
   }
 
-  const activateCell = (item) => setActiveCell(item)
+  useEffect(() => {
+    setWaiting(true);
+    api.getGrid()
+      .then((gridStructure) => {
+        saveGrid(gridStructure);
+        setWaiting(false);
+      });
+  }, [])
 
-  let gridRowsAux = gridRows && Object.entries(gridRows).map(([name, cells], ix) =>
+  const gridRowsAux = grid && grid.length > 0 && grid.map((gridRow, rowIndex) =>
     <GridRow
-      key={ix}
-      rowName={name}
-      rowContents={rowContents}
-      data={cells}
+      key={"row-" + rowIndex.toString()}
+      rowIndex={rowIndex}
+      rowContents={rowContents[rowIndex]}
+      gridRow={gridRow}
       onChange={
         (clickedSentences) => {
-          setCorpus(clickedSentences);
+          setClickedSentences(clickedSentences);
           setContext([])
         }
       }
       onDrop={
         (clickedSentences, grid, colNames) => {
-          setCorpus(clickedSentences);
-          setGridRows(grid);
-          setColNumToName(colNames);
+          setClickedSentences(clickedSentences);
+          setGrid(grid);
+          setColNames(colNames);
           setContext([])
         }
       }
@@ -109,42 +124,38 @@ export default function Grid() {
     />
   )
 
-  // Get the col names from the first row
-  // let rowNames = Object.keys(data)
-  let rows = Object.values(gridRows)
-  let footer = null
-  if (rows.length > 0) {
-    let row = rows[0]
-    // let colIDs = Object.keys(row)
-    let colNames = colNumToName
-    footer = colNames.map((name, ix) =>
-      <Footer
-        key={ix}
-        id={ix}
-        colName={name}
-        editColName={editColName}
-        setEditColName={setEditColName}
-        frozenColumns={frozenColumns}
-        onFooter={(grid, colNames, frozenColumns) => {
-          setGridRows(grid);
-          setColNumToName(colNames);
-          setFrozenColumns(frozenColumns);
-        }}
-        onDeleteFrozen={(clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex) => {
-          setCorpus(clickedSentences);
-          setGridRows(grid);
-          setColNumToName(colNames);
-          setFrozenColumns(frozenColumns);
-          activateCell([rowIndex, colIndex]);
-        }}
-      />
-    )
-  }
+  const footer = colNames && colNames.length > 0 && colNames.map((colName, colIndex) =>
+    <Footer
+      key={"footer-" + colIndex.toString()}
+      colIndex={colIndex}
+      colName={colName}
+      frozenColumns={frozenColumns}
+      onFooter={(grid, colNames, frozenColumns) => {
+        setGrid(grid);
+        setColNames(colNames);
+        setFrozenColumns(frozenColumns);
+      }}
+      onDeleteFrozen={(clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex) => {
+        setClickedSentences(clickedSentences);
+        setGrid(grid);
+        setColNames(colNames);
+        setFrozenColumns(frozenColumns);
+        activateCell([rowIndex, colIndex]);
+      }}
+      editColName={editColName}
+      setEditColName={setEditColName}
+    />
+  );
 
   return (
     waiting ? <Loading /> : (
       <DndProvider backend={HTML5Backend}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px', borderBottom: corpus && corpus.length > 0 ? '1px solid #DDDDDD' : 'none' }}>
+        <div style={{
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          margin: '20px', 
+          borderBottom: clickedSentences && clickedSentences.length > 0 ? '1px solid #DDDDDD' : 'none'
+        }}>
           <table style={
             {
               tableLayout: "fixed",
@@ -191,7 +202,7 @@ export default function Grid() {
           </div>
         </div>
         <Sentences
-          corpus={corpus}
+          corpus={clickedSentences}
           context={context}
           onChangeContext={(text) => {
             setContext(text);

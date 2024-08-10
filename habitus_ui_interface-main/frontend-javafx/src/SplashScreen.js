@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
 import { api } from "api";
+
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import './SplashScreen.css';
 
-export default function SplashScreen({ apiurl }) {
-
+export function SplashScreen({ apiurl }) {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {

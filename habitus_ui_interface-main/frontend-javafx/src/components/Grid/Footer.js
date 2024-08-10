@@ -1,8 +1,9 @@
-import { useState } from "react"
-import { Icon } from "@iconify/react"
 import { api } from "api"
 
-export default function Footer({ colIndex, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
+import { Icon } from "@iconify/react"
+import { useState } from "react"
+
+export function Footer({ colIndex, colName, frozenColumns, onFooter, onDeleteFrozen, editColName, setEditColName }) {
   const [showButtons, setShowButtons] = useState(false)
   const [hoverEdit, setHoverEdit] = useState(false)
   const [hoverDelete, setHoverDelete] = useState(false)

@@ -1,8 +1,8 @@
 import { StyledButton } from "./styles";
-import { Icon } from '@iconify/react';
 
-function Button(props) {
+import { Icon } from "@iconify/react";
 
+export function Button(props) {
   const { icon, label, color, onClick, noGap } = props
 
   return (
@@ -12,5 +12,3 @@ function Button(props) {
     </StyledButton>
   );
 }
-
-export default Button;

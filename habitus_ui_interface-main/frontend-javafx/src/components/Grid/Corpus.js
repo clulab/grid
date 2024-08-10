@@ -1,6 +1,7 @@
-import { useDrag } from "react-dnd";
-import { useEffect, useState } from "react";
 import { api } from "api";
+
+import { useEffect, useState } from "react";
+import { useDrag } from "react-dnd";
 
 function Sentence({ text, onChange, activateSentence, isActive }) {
   const [{ isDragging }, dragRef] = useDrag({
@@ -37,7 +38,7 @@ function Sentence({ text, onChange, activateSentence, isActive }) {
   );
 }
 
-export default function Corpus({ sentences, onChange }) {
+export function Corpus({ sentences, onChange }) {
 
   const [activeSentence, setActiveSentence] = useState();
   const activateSentence = (item) => setActiveSentence(item);
