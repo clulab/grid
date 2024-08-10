@@ -26,6 +26,7 @@ export function Footer({ colIndex, colName, frozenColumns, isCalculated, onFoote
         <div>
           {editColIndex === colIndex ?
             <input
+              autoFocus
               placeholder={colName}
               className="footer"
               style={{ '--placeholder-color': 'gray' }}
