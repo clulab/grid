@@ -88,9 +88,9 @@ export const api = {
   addColumn: async function(colQuery) {
     const query = toQuery([["colQuery", colQuery]]);
     const json = await fetchForApi(`/addColumn${query}`);
-    const [grid, rowNames, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
+    const [grid, rowNames, colNames, clickedSentences, frozenColumns, , rowIndex, colIndex] = destructureGrid(json)
 
-    return [clickedSentences, grid, colNames, frozenColumns];
+    return [grid, rowNames, colNames, clickedSentences, frozenColumns, rowIndex, colIndex];
   },
   modColumn: async function(colIndex, name) {
     const query = toQuery([["colIndex", colIndex], ["colName", name]]);
