@@ -79,5 +79,4 @@ export function Footer({ colIndex, colName, frozenColumns, isCalculated, onFoote
       </div>
     </td>
   )
-
 }
