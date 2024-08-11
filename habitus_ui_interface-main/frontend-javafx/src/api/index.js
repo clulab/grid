@@ -78,8 +78,7 @@ export const api = {
     return [preContext, text, postContext];
   },
   dragSentence: async function(colIndex, sentenceIndex) {
-    console.info("colIndex " + colIndex + " sentenceIndex " + sentenceIndex);
-    const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
+     const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/dragSentence${query}`);
     const [grid, , , clickedSentences, , cellContents , , ] = destructureGrid(json)
 

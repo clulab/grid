@@ -28,10 +28,7 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
         })
     },
     canDrop: (item) => {
-      console.info("monitor is " + JSON.stringify(item));
-      const sentenceIndex = item.sentence.index;
-      console.info("Trying to match sentenceIndex " + sentenceIndex); // TODO: Need to change cellContents and rowContents
-   
+      const sentenceIndex = item.sentence.index;  
       const inCellContents = cellContents.includes(sentenceIndex);
       const inRowContents = rowContents.includes(sentenceIndex);
   
