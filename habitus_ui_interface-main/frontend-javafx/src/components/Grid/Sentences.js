@@ -15,7 +15,7 @@ export function Sentences ({ clickedSentences, context, onChangeContext }) {
           />
         </div>
 
-        {context.length > 0 && (
+        {(context[0] || context[1] || context[2]) && (
           <>
             <div style={{ top: '0', bottom: '0', left: '50%', width: '1px', backgroundColor: '#ccc' }}></div>
             <div style={{ width: '48%' }}>

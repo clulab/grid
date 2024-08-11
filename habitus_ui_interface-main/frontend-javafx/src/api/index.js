@@ -81,9 +81,9 @@ export const api = {
     console.info("colIndex " + colIndex + " sentenceIndex " + sentenceIndex);
     const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/dragSentence${query}`);
-    const [grid, , colNames, clickedSentences, , , , ] = destructureGrid(json)
+    const [grid, , , clickedSentences, , cellContents , , ] = destructureGrid(json)
 
-    return [clickedSentences, grid, colNames];
+    return [grid, clickedSentences, cellContents];
   },
 
   addColumn: async function(colQuery) {

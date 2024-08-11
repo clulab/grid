@@ -23,14 +23,14 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
     accept: 'sentence',
     drop: (item) => {
       api.dragSentence(colIndex, item.sentence.index)
-        .then(([clickedSentences, grid, colNames]) => {
-          onDrop(clickedSentences, grid, colNames)
+        .then(([grid, clickedSentences, cellContents]) => {
+          onDrop(grid, clickedSentences, cellContents)
         })
     },
     canDrop: (item) => {
       console.info("monitor is " + JSON.stringify(item));
       const sentenceIndex = item.sentence.index;
-      console.info("Trying to match sentenceIndex " + sentenceIndex);
+      console.info("Trying to match sentenceIndex " + sentenceIndex); // TODO: Need to change cellContents and rowContents
    
       const inCellContents = cellContents.includes(sentenceIndex);
       const inRowContents = rowContents.includes(sentenceIndex);

@@ -15,7 +15,10 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
     <li 
       className="li-corpus"
       ref={dragRef}
-      onDrag={(event) => { activateSentenceIndex(-1) }}
+      onDrag={(event) => { 
+        activateSentenceIndex(-1);
+        onChange(null, null, null);
+      }}
       style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
       onClick={(event) => {
         api.clickSentence(sentence.index)

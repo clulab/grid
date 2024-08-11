@@ -12,6 +12,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import "./styles.css";
 
 export function Grid() {
+  const noContext = [null, null, null];
+
   const [grid, setGrid] = useState({});
   const [rowNames, setRowNames] = useState([]);
   const [colNames, setColNames] = useState([]);
@@ -21,9 +23,13 @@ export function Grid() {
   const [activeCell, setActiveCell] = useState([]);
 
   const [editColIndex, setEditColIndex] = useState(-1);
-  const [context, setContext] = useState([]);
+  const [context, setContext] = useState(noContext);
   const [copying, setCopying] = useState(false);
   const [waiting, setWaiting] = useState(false);
+
+  function resetContext() {
+    setContext(noContext);
+  }
 
   function activateCell(rowIndex, colIndex) {
     setActiveCell([rowIndex, colIndex]);
@@ -103,15 +109,15 @@ export function Grid() {
       onChange={
         (clickedSentences) => {
           setClickedSentences(clickedSentences);
-          setContext([])
+          resetContext();
         }
       }
       onDrop={
-        (clickedSentences, grid, colNames) => {
-          setClickedSentences(clickedSentences);
+        (grid, clickedSentences, cellContents) => { // TODO: need to update more
           setGrid(grid);
-          setColNames(colNames);
-          setContext([])
+          setClickedSentences(clickedSentences);
+          setCellContents(cellContents);
+          resetContext();
         }
       }
       activateCell={activateCell}
