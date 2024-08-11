@@ -1,3 +1,3 @@
-import GridPage from "./GridPage"
+import { GridPage } from "./GridPage"
 
 export { GridPage }

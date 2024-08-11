@@ -1,6 +1,6 @@
 const apiUrl = 'http://127.0.0.1:8001';
 
-const fetchFromApi = async (path) => {
+async function fetchForApi(path) {
   const url = `${apiUrl}${path}`;
   console.log(url);
 
@@ -19,109 +19,103 @@ const fetchFromApi = async (path) => {
   }
 };
 
-export const api = {
-  getBackendReady: async function() {
-    const json = await fetchFromApi("/backend-ready");
-    const message = json.message;
-
-    return [message];
-  },
-  getClick: async function(rowName, colName) {
-    const query = toQuery([["row", rowName], ["col", colName]]);
-    const json = await fetchFromApi(`/click/${query}`);
-    const clickedSentences = json
-
-    return [clickedSentences];
-  },
-  getCopyToggle: async function() {
-    const json = await fetchFromApi(`/copyToggle/`);
-    const copyOn = json;
-
-    return [copyOn];
-  },
-  getData: async function() {
-    const json = await fetchFromApi('/data/');
-    const rowName = json.row_name || "";
-    const colIndex = json.col_index || "";
-    const clickedSentences = json.clicked_sentences;
-    const grid = json.grid;
-    const colNames = json.col_names;
-    const frozenColumns = json.frozen_columns;
-    const rowContents = json.row_contents;
-
-    return [clickedSentences, grid, colNames, frozenColumns, rowContents, rowName, colIndex];
-  },
-  getDeleteFrozenColumn: async function(id) {
-    const query = toQuery([["id", id]]);
-    const json = await fetchFromApi(`/deleteFrozenColumn/${query}`);
-    const rowName = json.row_name || "";
-    const colIndex = json.col_index || "";
-    const clickedSentences = json.clicked_sentences;
-    const grid = json.grid;
-    const colNames = json.col_names;
-    const frozenColumns = json.frozen_columns;
-
-    return [clickedSentences, grid, colNames, frozenColumns, rowName, colIndex];
-  },
-  getDrag: async function(rowName, colName, text) {
-    const query = toQuery([["row", rowName], ["col", colName], ["sent", text]]);
-    const json = await fetchFromApi(`/drag/${query}`);
-    const clickedSentences = json.clicked_sentences;
-    const grid = json.grid;
-    const colNames = json.col_names;
-
-    return [clickedSentences, grid, colNames];
-  },
-  getEditName: async function(id, name) {
-    const query = toQuery([["id", id], ["name", name]]);
-    const json = await fetchFromApi(`/editName/${query}`);
-    const grid = json.grid;
-    const colNames = json.col_names;
-    const frozenColumns = json.frozen_columns;
-    
-    return [grid, colNames, frozenColumns];
-  },
-  getRegenerate: async function() {
-    const json = await fetchFromApi(`/regenerate/`);
-    const clickedSentences = json.clicked_sentences;
-    const grid = json.grid;
-    const colNames = json.col_names;
-    const frozenColumns = json.frozen_columns;
-
-    return [clickedSentences, grid, colNames, frozenColumns];
-  },
-  getSentenceClick: async function(text) {
-    const query = toQuery([["text", text]]);
-    const json = await fetchFromApi(`/sentenceClick/${query}`);
-    const newText = json;
-
-    return [newText];
-  },
-  getSetK: async function(k) {
-    const query = toQuery([["k", k]]);
-    /*const json =*/ await fetchFromApi(`/setK/${query}`);
-
-    return [];
-  },
-  getTextInput: async function(text) {
-    const query = toQuery([["text", text]]);
-    const json = await fetchFromApi(`/textInput/${query}`);
-    const clickedSentences = json.clicked_sentences;
-    const grid = json.grid;
-    const colNames = json.col_names;
-    const frozenColumns = json.frozen_columns;
-    const rowName = json.row_name;
-    const colIndex = json.col_index;
-
-    return [clickedSentences, grid, colNames, frozenColumns, rowName, colIndex];
-  }
-}
-
 // This should be an array of arrays of two.
 // The two are name and values.
-export function toQuery(namesAndValues) {
+function toQuery(namesAndValues) {
   const urlSearchParams = new URLSearchParams();
   namesAndValues.forEach(nameAndValue => urlSearchParams.append(nameAndValue[0], nameAndValue[1]));
   const query = "?" + urlSearchParams.toString();
   return query;
+}
+
+function destructureGrid(json) {
+  const grid = json.grid;
+  const rowInfo = json.rowInfo;
+  const colNames = json.colNames;
+  const clickedSentences = json.clickedSentences;
+  const frozenColumns = json.frozenColumns;
+  const cellContents = json.cellContents;
+  const rowIndexString = json.rowIndex || "-1";
+  const colIndexString = json.colIndex || "-1";
+  const rowIndex = parseInt(rowIndexString);
+  const colIndex = parseInt(colIndexString);
+
+  return [grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex];
+}
+
+export const api = {
+  getReady: async function() {
+    const json = await fetchForApi("/getReady");
+    const message = json.message;
+
+    return [message];
+  },
+
+  getGrid: async function() {
+    const json = await fetchForApi('/getGrid');
+
+    return destructureGrid(json);
+  },
+  newGrid: async function() {
+    const json = await fetchForApi(`/newGrid`);
+    const [grid, rowInfo, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
+
+    return [grid, rowInfo, colNames, clickedSentences, frozenColumns];
+  },
+
+  clickCell: async function(rowIndex, colIndex) {
+    const query = toQuery([["rowIndex", rowIndex], ["colIndex", colIndex]]);
+    const json = await fetchForApi(`/clickCell${query}`);
+    const clickedSentences = json
+
+    return [clickedSentences];
+  },
+  clickSentence: async function(sentenceIndex) {
+    const query = toQuery([["sentenceIndex", sentenceIndex]]);
+    const json = await fetchForApi(`/clickSentence${query}`);
+    const [preContext, text, postContext] = json;
+
+    return [preContext, text, postContext];
+  },
+  dragSentence: async function(colIndex, sentenceIndex) {
+    const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
+    const json = await fetchForApi(`/dragSentence${query}`);
+    const [grid, , , clickedSentences, , cellContents , , ] = destructureGrid(json)
+
+    return [grid, clickedSentences, cellContents];
+  },
+
+  addColumn: async function(colQuery) {
+    const query = toQuery([["colQuery", colQuery]]);
+    const json = await fetchForApi(`/addColumn${query}`);
+    
+    return destructureGrid(json);
+  },
+  modColumn: async function(colIndex, name) {
+    const query = toQuery([["colIndex", colIndex], ["colName", name]]);
+    const json = await fetchForApi(`/modColumn${query}`);
+    const [grid, , colNames, , frozenColumns, , , ] = destructureGrid(json)
+    return [grid, colNames, frozenColumns];
+  },
+  delColumn: async function(colIndex) {
+    const query = toQuery([["colIndex", colIndex]]);
+    const json = await fetchForApi(`/delColumn${query}`);
+
+    return destructureGrid(json);
+  },
+
+
+  setK: async function(k) {
+    const query = toQuery([["k", k.toString()]]);
+    /*const json =*/ await fetchForApi(`/setK${query}`);
+
+    return [];
+  },
+
+  togMode: async function() {
+    const json = await fetchForApi(`/togMode`);
+    const copyOn = json;
+
+    return [copyOn];
+  }
 }

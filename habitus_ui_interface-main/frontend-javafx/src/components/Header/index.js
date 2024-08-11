@@ -1,6 +1,6 @@
 import './styles.css'
 
-function Header({ children }) {
+export function Header({ children }) {
 
   return (
     <div className="styled-header">
@@ -8,5 +8,3 @@ function Header({ children }) {
     </div>
   );
 }
-
-export default Header;
