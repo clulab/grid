@@ -15,7 +15,7 @@ export function Grid() {
   const noContext = [null, null, null];
 
   const [grid, setGrid] = useState({});
-  const [rowNames, setRowNames] = useState([]);
+  const [rowInfo, setRowInfo] = useState([]);
   const [colNames, setColNames] = useState([]);
   const [clickedSentences, setClickedSentences] = useState([]);
   const [frozenColumns, setFrozenColumns] = useState([]);
@@ -35,9 +35,9 @@ export function Grid() {
     setActiveCell([rowIndex, colIndex]);
   }
 
-  function saveGrid([grid, rowNames, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) {
+  function saveGrid([grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) {
     setGrid(grid);
-    setRowNames(rowNames);
+    setRowInfo(rowInfo);
     setColNames(colNames);
     setClickedSentences(clickedSentences);
     setFrozenColumns(frozenColumns);
@@ -57,9 +57,9 @@ export function Grid() {
     event.preventDefault();
     setWaiting(true)
     api.newGrid()
-      .then(([grid, rowNames, colNames, clickedSentences, frozenColumns]) => {
+      .then(([grid, rowInfo, colNames, clickedSentences, frozenColumns]) => {
         setGrid(grid);
-        setRowNames(rowNames);
+        setRowInfo(rowInfo);
         setColNames(colNames);
         setClickedSentences(clickedSentences);
         setFrozenColumns(frozenColumns);
@@ -103,7 +103,7 @@ export function Grid() {
     <GridRow
       key={"row-" + rowIndex.toString()}
       rowIndex={rowIndex}
-      rowName={rowNames[rowIndex]}
+      rowInfo={rowInfo[rowIndex]}
       gridRow={gridRow}
       rowContents={cellContents[rowIndex]}
       onChange={
@@ -113,7 +113,7 @@ export function Grid() {
         }
       }
       onDrop={
-        (grid, clickedSentences, cellContents) => { // TODO: need to update more
+        (grid, clickedSentences, cellContents) => {
           setGrid(grid);
           setClickedSentences(clickedSentences);
           setCellContents(cellContents);
@@ -137,12 +137,8 @@ export function Grid() {
         setColNames(colNames);
         setFrozenColumns(frozenColumns);
       }}
-      onDeleteFrozen={(clickedSentences, grid, colNames, frozenColumns, rowIndex, colIndex) => {
-        setClickedSentences(clickedSentences);
-        setGrid(grid);
-        setColNames(colNames);
-        setFrozenColumns(frozenColumns);
-        activateCell([rowIndex, colIndex]);
+      onDeleteFrozen={(gridStructure) => {
+        saveGrid(gridStructure);
       }}
       editColIndex={editColIndex}
       setEditColIndex={setEditColIndex}

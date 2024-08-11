@@ -10,6 +10,7 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
       isDragging: monitor.isDragging()
     })
   });
+  const color = sentence.color
 
   return (
     <li 
@@ -34,7 +35,14 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
           });
       }}
     >
-      <b>{(sentence.index + 1).toString()}.</b> {sentence.text} {isDragging}
+      <span
+        style={{
+          color: color,
+          fontWeight: "bold"
+        }}
+      >
+        {(sentence.index + 1).toString()}.
+      </span> {sentence.text} {isDragging}
     </li>
   );
 }

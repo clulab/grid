@@ -30,7 +30,7 @@ function toQuery(namesAndValues) {
 
 function destructureGrid(json) {
   const grid = json.grid;
-  const rowNames = json.rowNames;
+  const rowInfo = json.rowInfo;
   const colNames = json.colNames;
   const clickedSentences = json.clickedSentences;
   const frozenColumns = json.frozenColumns;
@@ -40,7 +40,7 @@ function destructureGrid(json) {
   const rowIndex = parseInt(rowIndexString);
   const colIndex = parseInt(colIndexString);
 
-  return [grid, rowNames, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex];
+  return [grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex];
 }
 
 export const api = {
@@ -58,9 +58,9 @@ export const api = {
   },
   newGrid: async function() {
     const json = await fetchForApi(`/newGrid`);
-    const [grid, rowNames, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
+    const [grid, rowInfo, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
 
-    return [grid, rowNames, colNames, clickedSentences, frozenColumns];
+    return [grid, rowInfo, colNames, clickedSentences, frozenColumns];
   },
 
   clickCell: async function(rowIndex, colIndex) {
@@ -78,7 +78,7 @@ export const api = {
     return [preContext, text, postContext];
   },
   dragSentence: async function(colIndex, sentenceIndex) {
-     const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
+    const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/dragSentence${query}`);
     const [grid, , , clickedSentences, , cellContents , , ] = destructureGrid(json)
 

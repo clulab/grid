@@ -1,6 +1,6 @@
 import { GridCell } from "./GridCell"
 
-export function GridRow({rowIndex, rowName, gridRow, rowContents, onChange, onDrop, activateCell, activeCell}) {
+export function GridRow({rowIndex, rowInfo, gridRow, rowContents, onChange, onDrop, activateCell, activeCell}) {
   const cells = gridRow.map((colorValue, colIndex) =>
     <GridCell
       key={"row-" + rowIndex.toString() + " col-" + colIndex.toString()}
@@ -15,10 +15,16 @@ export function GridRow({rowIndex, rowName, gridRow, rowContents, onChange, onDr
       isActive={activeCell[0] === rowIndex && activeCell[1] === colIndex}
     />
   )
+  const color = rowInfo.color
 
   return (<tr>
-    <td className="row-name">
-      {rowName}
+    <td
+      className="row-name"
+      style={{
+        color: color
+      }}
+    >
+      {rowInfo.name}
     </td>
     {cells}
   </tr>)
