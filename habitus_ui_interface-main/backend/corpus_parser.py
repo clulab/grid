@@ -105,15 +105,11 @@ def parse_supercorpus(corpus_name, input_dir, output_filepath):
 
     print("rows", rows)
     # In this process the columns seem to get sorted.
-    #df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
+    df = pd.concat([rows.drop('label', 1), pd.get_dummies(rows.label)], axis = 1)
     for col in rows:
         if 'Unnamed:' in col:
             rows.drop(col, inplace = True)
-    rows['all'] = 1
-    rows.to_csv(output_file + '_row_labels.csv')
+    df['all'] = 1
+    df.to_csv(output_file + '_row_labels.csv')
 
     print(f"Output: {output_file}\n")
-
-
-
-

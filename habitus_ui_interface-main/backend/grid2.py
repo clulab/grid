@@ -7,7 +7,7 @@ from .document import Document
 from .soft_kmeans import SoftKMeans
 from .surdeanu2005 import Surdeanu2005
 
-class Grid():
+class Grid2():
 	def __init__(self, path: str, supercorpus_filename: str, row_filename: str, unique_filename: str, corpus, k: int, clustering_algorithm, clusters: list[Cluster] = []):
 		self.path = path
 		self.k = k

@@ -2,20 +2,14 @@
 import { useEffect, useState } from 'react';
 import './SplashScreen.css';
 import { Link } from "react-router-dom";
+import { fetchDataFromApi, toQuery } from "services";
 
 export default function SplashScreen({ apiurl }) {
 
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    fetch('http://127.0.0.1:8000/backend-ready' /*, { mode: 'no-cors' } */)
-      .then((response) => {
-        console.log(response);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
+    fetchDataFromApi('/backend-ready')
       .then((data) => {
         if (data.message === 'Backend is ready!') {
           // createWindow()

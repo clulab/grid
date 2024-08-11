@@ -271,16 +271,16 @@ async def processSupercorpus(supercorpusFilepath: str):
     return respond(entrypoint, result)
 
 @app.get("/setSuperfiles/")
-async def setSuperfiles(corpusFilename: str, rowFilename: str):
+async def setSuperfiles(corpusFilename: str, rowFilename: str): #, path: str):
     entrypoint = enter("/setSuperfiles/")
-    result = frontend.backend.set_superfiles(corpusFilename, rowFilename)
+    result = frontend.backend.set_superfiles(corpusFilename, rowFilename, path=None)
     return respond(entrypoint, result)
 
 @app.get("/loadNewGrid/")
 async def loadNewGrid(corpusFilename: str, rowFilename: str, newFilename: str, newAnchor: str):
     entrypoint = enter("/loadNewGrid/")
     print("loadNewGrid", newFilename, newAnchor)
-    if frontend.backend.set_superfiles(corpusFilename, rowFilename):
+    if frontend.backend.set_superfiles(corpusFilename, rowFilename, path=None):
         result = frontend.load_new_grid(newFilename, newAnchor)
     else:
         result = False

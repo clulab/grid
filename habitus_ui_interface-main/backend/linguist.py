@@ -90,13 +90,16 @@ class Linguist():
 		for doc in documents:
 			di = doc.get_index()
 			for word in doc.tokens:
-				val = tfidf[di, self.tfidf_vectorizer.vocabulary_[word]]
-				if word in word_tfidf:
-					word_tfidf[word] += val
-				else:
-					word_tfidf[word] = [val]
+				try:
+					val = tfidf[di, self.tfidf_vectorizer.vocabulary_[word]]
+					if word in word_tfidf:
+						word_tfidf[word] += val
+					else:
+						word_tfidf[word] = [val]
+				except:
+					pass
 
-		words = [word for document in documents for word in document.tokens]
+		words = [word for document in documents for word in document.tokens if self.tfidf_vectorizer.vocabulary_.get(word)]
 		all_words = list(set(words))
 		top_words = sorted((((np.mean(word_tfidf[word])), word)  for i, word in enumerate(all_words) if word != anchor_word), reverse = True)[0:n]
 		return top_words

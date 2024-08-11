@@ -1,8 +1,9 @@
-import React from 'react';
-import { StyledInput, InputContainer, IconContainer } from './styles';
-import { Icon } from '@iconify/react';
+import { IconContainer, InputContainer,StyledInput  } from "./styles";
 
-const Input = ({ icon, placeholder, onKeyPress, onInput }) => {
+import { Icon } from "@iconify/react";
+import React from "react";
+
+export const Input = ({ icon, placeholder, onKeyPress, onInput }) => {
   return (
     <InputContainer>
       <StyledInput placeholder={placeholder} onKeyPress={onKeyPress} onInput={onInput} />
@@ -12,6 +13,3 @@ const Input = ({ icon, placeholder, onKeyPress, onInput }) => {
     </InputContainer>
   );
 };
-
-export default Input;
-

@@ -24,7 +24,7 @@ class Corpus():
 		self.rows = rows
 
 		self.model = None
-		self.model_filename = "./process_files/glove.6B.300d.txt"
+		self.model_filename = "../process_files/glove.6B.300d.txt"
 		self.linguist = linguist
 		self.documents: list[Document] = self.load_anchored_documents(anchor == 'load_all')
 		self.initialize(preexisting)
@@ -39,11 +39,13 @@ class Corpus():
 		self.words_in_docs = list(set(words))
 		
 		self.load_vectors(self.documents, preexisting)
-		self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.npy')
+		# self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.npy')
+		self.doc_distances = self.load_distances(self.clean_supercorpus_filename + '_doc_distances_lem.txt')
 
 
 	def load_distances(self, filename: str):
-		doc_distances = np.load(self.path + filename)
+		# doc_distances = np.load(self.path + filename)
+		doc_distances = np.loadtxt(self.path + filename)
 		return doc_distances
 
 
@@ -75,7 +77,8 @@ class Corpus():
 		if not self.model:
 			self.model = KeyedVectors.load_word2vec_format(self.model_filename, no_header = True)
 		doc_distances, doc_vecs = get_dist_between_docs(documents, self.word_indices, self.model, self.tfidf, self.linguist.tfidf_vectorizer, None, self.anchor, None, preexisting)
-		np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
+		# np.save(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.npy', doc_distances)
+		np.savetxt(self.path + self.clean_supercorpus_filename + '_doc_distances_lem.txt', doc_distances)
 		with open(self.path + self.clean_supercorpus_filename + '_doc_vecs_lem.json', 'w') as file:
 			json.dump({k: v.tolist() for k, v in doc_vecs.items()}, file) 
 
@@ -109,7 +112,7 @@ class Corpus():
 						memberships = [label_line[1][row.name] == 1 for row in self.rows]
 					except IndexError:
 						memberships = []
-						# print("Line not found in row_labels: ", readable)
+						print("Line not found in row_labels: ", readable)
 					pre_context = ' '.join(list(lines.loc[index - 4:index-1, 'readable']))
 					post_context = ' '.join(list(lines.loc[index+1:index+4, 'readable']))
 					document = Document(doc_i, stripped, readable, tokens, pre_context, post_context, memberships = memberships)

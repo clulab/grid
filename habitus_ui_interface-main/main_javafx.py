@@ -8,9 +8,12 @@ from javafx_app import JavafxApp
 from backend.javafx_frontend import JavafxFrontend
 
 def getApp():
+    dirname = sys.argv[1]
+    k = int(sys.argv[2])
     app = JavafxApp(
-        frontend = JavafxFrontend(sys.argv[1], './process_files/', 6,'kmeans')
+        frontend = JavafxFrontend(dirname, './process_files/', k, 'kmeans')
     )
     return app
 
-uvicorn.run(getApp())
+if __name__ == "__main__":
+    uvicorn.run(getApp())

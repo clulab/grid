@@ -1,25 +1,30 @@
-import GridCell from "./GridCell"
+import { GridCell } from "./GridCell"
 
-export default function GridRow({ rowName, rowContents, data, onChange, onDrop, activateCell, activeCell }) {
-
-  let cells = Object.entries(data).map(([colName, v], ix) =>
+export function GridRow({rowIndex, rowInfo, gridRow, rowContents, onChange, onDrop, activateCell, activeCell}) {
+  const cells = gridRow.map((colorValue, colIndex) =>
     <GridCell
-      key={ix}
-      id={rowName + colName}
-      colorValue={v}
-      rowName={rowName}
-      rowContents={rowContents}
-      colName={colName}
+      key={"row-" + rowIndex.toString() + " col-" + colIndex.toString()}
+      rowIndex={rowIndex}
+      colIndex={colIndex}
+      cellContents={rowContents[colIndex]}
+      rowContents={rowContents[rowContents.length - 1]}
+      colorValue={colorValue}
       onChange={onChange}
       onDrop={onDrop}
       activateCell={activateCell}
-      isActive={activeCell === rowName + colName}
+      isActive={activeCell[0] === rowIndex && activeCell[1] === colIndex}
     />
   )
+  const color = rowInfo.color
 
   return (<tr>
-    <td className="row-name">
-      {rowName}
+    <td
+      className="row-name"
+      style={{
+        color: color
+      }}
+    >
+      {rowInfo.name}
     </td>
     {cells}
   </tr>)

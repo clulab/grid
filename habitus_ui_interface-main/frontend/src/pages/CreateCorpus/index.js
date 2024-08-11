@@ -46,6 +46,10 @@ function CreateCorpus() {
 
 	const handleButton = () => {
 		let text = 'load_all'
+		let cleanRowFilename = rowFilename
+		
+		if (rowFilename.endsWith(".csv"))
+			cleanRowFilename = rowFilename.substring(0, rowFilename.length - 4)
 
 		if (validFile && rowFilename.length > 0) {
 			if (anchor.length > 0) {
@@ -53,7 +57,7 @@ function CreateCorpus() {
 			}
 			setWaiting(true)
 			setError(false)
-			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", rowFilename], ["newFilename", filename], ["newAnchor", text]]);
+			let query = toQuery([["corpusFilename", supercorpus], ["rowFilename", cleanRowFilename], ["newFilename", filename], ["newAnchor", text]]);
 			fetchDataFromApi(`/loadNewGrid/${query}`)
 				.then(data => {
 					setWaiting(false);

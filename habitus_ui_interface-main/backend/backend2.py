@@ -8,7 +8,7 @@ from .grid import Grid
 from .linguist import Linguist
 from .row import Row
 
-class Backend():
+class Backend2():
 	def __init__(self, path: str):
 		self.path = path
 		self.supercorpus_filename = None
@@ -16,12 +16,11 @@ class Backend():
 		self.row_labels_filename = None
 		self.linguist = Linguist()
 
-	def process_supercorpus(self, supercorpus_filename):
-		supercorpus_filepath = self.path + supercorpus_filename
+	def process_supercorpus(self, supercorpus_filepath):
 		try:
 			supercorpus_name = supercorpus_filepath.rsplit('/', 2)[1] # The folder containing the corpus will become the corpus name
 			temporary_clean_supercorpus_filename = 'cleaned_' + supercorpus_name
-			self.row_labels_filename = supercorpus_name + '_row_labels' # .csv'
+			row_labels_filename = supercorpus_name + '_row_labels.csv'
 			can_update = os.path.isfile(self.path + temporary_clean_supercorpus_filename + '.csv')
 
 			if can_update:
@@ -36,20 +35,18 @@ class Backend():
 					Corpus.clean_corpus(self.path, supercorpus_name, temporary_clean_supercorpus_filename)
 
 				stripped = pd.read_csv(self.path + temporary_clean_supercorpus_filename + '.csv')['stripped'] # Need to add "stripped" column to row labels
-				row_labels = pd.read_csv(self.path + self.row_labels_filename + '.csv')
+				row_labels = pd.read_csv(self.path + row_labels_filename)
 				row_labels['stripped'] = stripped
-				row_labels.to_csv(self.path + self.row_labels_filename + '.csv')
-				rows = [Row(row_name) for row_name in list(row_labels)[2:-1]]
+				row_labels.to_csv(self.path + row_labels_filename)
 
 				if can_update:
 					print(f"Updating files associated with corpus {supercorpus_name}") # If there's already an embedding file, update the existing corpus embedding file, don't recalculate everything.
 				else:
 					print(f"Creating vector embeddings for corpus {supercorpus_name}") # Otherwise, you have to make the embeddings files.
 
-				self.clean_supercorpus_filename = temporary_clean_supercorpus_filename
-				Corpus(self.path, temporary_clean_supercorpus_filename, self.row_labels_filename, rows, 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
+				Corpus(self.path, temporary_clean_supercorpus_filename, '', [], 'load_all', self.linguist, preexisting) # This will calculate the embeddings. Don't store it because then other grids will be messed up.
 
-				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': self.row_labels_filename + '.csv'}
+				return {'success': True, 'corpus_file': supercorpus_name + '.csv', 'rows_file': row_labels_filename}
 		except IndexError:
 			print(f"String {supercorpus_filepath} is not a path")
 
@@ -57,10 +54,8 @@ class Backend():
 		return {'success': False, 'corpus_file': None, 'rows_file': None}
 
 
-	def set_superfiles(self, supercorpus_filename, row_filename, path):
-		if path:
-			self.path = path
-		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename + ".csv"):
+	def set_superfiles(self, supercorpus_filename, row_filename):
+		if os.path.isfile(self.path + supercorpus_filename) and os.path.isfile(self.path + row_filename):
 			self.supercorpus_filename = supercorpus_filename.split(".")[0]
 			self.row_labels_filename = row_filename.split(".")[0]
 			self.clean_supercorpus_filename = 'cleaned_' + self.supercorpus_filename
@@ -76,9 +71,9 @@ class Backend():
 	def get_grid(self, k: int, anchor: str, grid_filename: str, clustering_algorithm: str) -> Grid:
 		print("New grid -- processing documents ... ")
 		unique_filename = grid_filename.split(".")[0]
-		self.set_up_corpus(anchor)
-		grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
-		return grid
+		if self.set_up_corpus(anchor): # If the corpus setup went well
+			grid = Grid.generate(self.path, self.clean_supercorpus_filename, self.row_labels_filename, grid_filename, self.corpus, k, clustering_algorithm)
+			return grid
 
 
 	def load_grid(self, unique_filename: str, clustering_algorithm: str) -> Grid:
@@ -107,6 +102,9 @@ class Backend():
 		columns = [column for column in data.columns if not column.startswith("Unnamed: 0") and column != 'stripped' and column != 'readable']
 		self.rows = [Row(row_name) for row_name in columns]
 		self.corpus = Corpus(self.path, self.clean_supercorpus_filename, self.row_labels_filename, self.rows, anchor, self.linguist)
+		if len(self.corpus.documents) < 4: # This is specific to the way I initialize the kmeans clusters (by pairs, thus you need four documents minimum for the minimum two clusters) -- so, can be done away with when clustering is improved
+			return False
+		return True
 
 	# Not sure if this should be in backend, or a method of Grid
 	def load_clusters(self, cells, col_names: list[str]):

@@ -1,22 +1,23 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
 import { api } from "api";
+
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import './SplashScreen.css';
 
-export default function SplashScreen({ apiurl }) {
-
+export function SplashScreen() {
   const [backendReady, setBackendReady] = useState(false)
 
   function checkBackendReady() {
-    api.getBackendReady()
+    api.getReady()
       .then(([message]) => {
         if (message === 'Backend is ready!')
           setBackendReady(true);
         else
           setTimeout(checkBackendReady, 5000);
       })
-      .catch((error) => {
+      .catch((_) => {
         setTimeout(checkBackendReady, 5000);
       });
   }
