@@ -1,4 +1,4 @@
-const apiUrl = 'http://127.0.0.1:8001';
+const apiUrl = 'http://127.0.0.1:8002';
 
 async function fetchForApi(path) {
   const url = `${apiUrl}${path}`;
