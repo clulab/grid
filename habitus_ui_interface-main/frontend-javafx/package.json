@@ -32,7 +32,7 @@
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.19"
   },
-  "main": "public/main.js",
+  "main": "public/grid.js",
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
