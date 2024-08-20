@@ -1,4 +1,4 @@
-const apiUrl = 'http://127.0.0.1:8002';
+const apiUrl = process.env.REACT_APP_GRID_SERVER;
 
 async function fetchForApi(path) {
   const url = `${apiUrl}${path}`;
