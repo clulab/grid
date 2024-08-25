@@ -10,7 +10,7 @@ Optionally install [yarn](https://yarnpkg.com/getting-started/install) if you pr
 
 From this `frontend` directory, run `npm install` to read the `package.json` file and install all the dependencies.
 
-When `npm start` is used to start the frontend in dev mode, an existing Python process is expected to be running a grid server and listening on port 8000.  Be sure to start that up first with the correct virtual environment.  When in production mode, code in `public/main.js` will attempt to run Python, install dependencies, and start up the server automatically.  See the main [README](../README.md) file for details.
+When `npm start` is used to start the frontend in dev mode, an existing Python process is expected to be running a grid server and listening on port 8002.  Be sure to start that up first with the correct virtual environment.  When in production mode, code in `public/main.js` will attempt to run Python, install dependencies, and start up the server automatically.  See the main [README](../README.md) file for details.
 
 ## Available Scripts
 

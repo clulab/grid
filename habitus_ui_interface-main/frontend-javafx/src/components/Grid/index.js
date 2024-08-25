@@ -5,7 +5,7 @@ import { Sentences } from "./Sentences";
 import { api } from "api";
 import { Button, Input, Loading, } from "components";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -35,7 +35,7 @@ export function Grid() {
     setActiveCell([rowIndex, colIndex]);
   }
 
-  function saveGrid([grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) {
+  const saveGrid = useCallback(([grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) => {
     setGrid(grid);
     setRowInfo(rowInfo);
     setColNames(colNames);
@@ -43,7 +43,7 @@ export function Grid() {
     setFrozenColumns(frozenColumns);
     setCellContents(cellContents);
     activateCell(rowIndex, colIndex);
-  }
+  }, [])
 
   function handleCopyButtonClicked(event) {
     event.preventDefault();
@@ -57,12 +57,13 @@ export function Grid() {
     event.preventDefault();
     setWaiting(true)
     api.newGrid()
-      .then(([grid, rowInfo, colNames, clickedSentences, frozenColumns]) => {
+      .then(([grid, rowInfo, colNames, clickedSentences, frozenColumns, rowIndex, colIndex]) => {
         setGrid(grid);
         setRowInfo(rowInfo);
         setColNames(colNames);
         setClickedSentences(clickedSentences);
         setFrozenColumns(frozenColumns);
+        activateCell(rowIndex, colIndex);
         setWaiting(false);
       });
   }
@@ -97,7 +98,7 @@ export function Grid() {
         saveGrid(gridStructure);
         setWaiting(false);
       });
-  }, [])
+  }, [saveGrid])
 
   const gridRowsAux = grid && grid.length > 0 && grid.map((gridRow, rowIndex) =>
     <GridRow
