@@ -41,9 +41,9 @@ export const api = {
   },
   newGrid: async function() {
     const json = fetchForApi(function() { return window.jxgridserver.newGrid(); });
-    const [grid, rowInfo, colNames, clickedSentences, frozenColumns, , , ] = destructureGrid(json)
+    const [grid, rowInfo, colNames, clickedSentences, frozenColumns, , rowIndex, colIndex] = destructureGrid(json)
 
-    return [grid, rowInfo, colNames, clickedSentences, frozenColumns];
+    return [grid, rowInfo, colNames, clickedSentences, frozenColumns, rowIndex, colIndex];
   },
 
   clickCell: async function(rowIndex, colIndex) {
