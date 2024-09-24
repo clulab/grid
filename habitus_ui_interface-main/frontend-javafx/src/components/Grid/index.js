@@ -57,12 +57,13 @@ export function Grid() {
     event.preventDefault();
     setWaiting(true)
     api.newGrid()
-      .then(([grid, rowInfo, colNames, clickedSentences, frozenColumns, rowIndex, colIndex]) => {
+      .then(([grid, rowInfo, colNames, clickedSentences, frozenColumns, cellContents, rowIndex, colIndex]) => {
         setGrid(grid);
         setRowInfo(rowInfo);
         setColNames(colNames);
         setClickedSentences(clickedSentences);
         setFrozenColumns(frozenColumns);
+        setCellContents(cellContents);
         activateCell(rowIndex, colIndex);
         setWaiting(false);
       });
