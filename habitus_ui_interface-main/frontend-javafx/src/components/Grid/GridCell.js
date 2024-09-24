@@ -31,8 +31,9 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
       const sentenceIndex = item.sentence.index;  
       const inCellContents = cellContents && cellContents.includes(sentenceIndex);
       const inRowContents = rowContents && rowContents.includes(sentenceIndex);
-  
-      return !inCellContents && inRowContents; 
+      const canDrop = !inCellContents && inRowContents;
+
+      return canDrop;
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
