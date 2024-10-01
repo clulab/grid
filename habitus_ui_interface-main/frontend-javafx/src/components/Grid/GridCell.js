@@ -53,14 +53,28 @@ export function GridCell({rowIndex, colIndex, cellContents, rowContents, colorVa
         border: isActive ? '2px solid #BE1C06' : `2px solid ${color}`
       }}
       onClick={(event) => {
-        api.clickCell(rowIndex, colIndex)
-          .then(([clickedSentences]) => {
-            onChange(clickedSentences);
-            if (isActive)
+        const reselection = isActive;
+        const unclick = event.ctrlKey || event.altKey;
+
+        if (unclick && reselection)
+          api.clickCell(rowIndex, colIndex)
+            .then(([clickedSentences]) => {
+              onChange(clickedSentences);
               activateCell(-1, -1)
-            else
+            })
+        else if (!unclick && !reselection)
+          api.clickCell(rowIndex, colIndex)
+            .then(([clickedSentences]) => {
+              onChange(clickedSentences);
               activateCell(rowIndex, colIndex);
-          })
+            })
+      }}
+      onDoubleClick={(event) => {
+        const reselection = isActive;
+        const unclick = event.ctrlKey || event.altKey;
+
+        if (!unclick && reselection)
+          api.doubleClickCell(rowIndex, colIndex);
       }}
     >
       {isOver && "Drop"}

@@ -51,11 +51,17 @@ export const api = {
 
     return [clickedSentences];
   },
+  doubleClickCell: async function(rowIndex, colIndex) {
+    const json = fetchForApi(function() { return window.jxgridserver.doubleClickCell(rowIndex, colIndex); })
+  },
   clickSentence: async function(sentenceIndex) {
     const json = fetchForApi(function() { return window.jxgridserver.clickSentence(sentenceIndex); });
     const [preContext, text, postContext] = json;
 
     return [preContext, text, postContext];
+  },
+  doubleClickSentence: async function(sentenceIndex) {
+    const json = fetchForApi(function() { return window.jxgridserver.doubleClickSentence(sentenceIndex); });
   },
   dragSentence: async function(colIndex, sentenceIndex) {
     const json = fetchForApi(function() { return window.jxgridserver.dragSentence(colIndex, sentenceIndex); });

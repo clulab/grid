@@ -22,17 +22,28 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
       }}
       style={{ border: isActive ? '2px solid #BE1C06' : '2px solid #eee' }}
       onClick={(event) => {
-        api.clickSentence(sentence.index)
-          .then(([preContext, text, postContext]) => {
-            if (isActive) {
+        const reselection = isActive;
+        const unclick = event.ctrlKey || event.altKey;
+
+        if (unclick && reselection)
+          api.clickSentence(sentence.index)
+            .then(([preContext, text, postContext]) => {
               activateSentenceIndex(-1);
               onChange(null, null, null);
-            }
-            else {
-              activateSentenceIndex(sentence.index);
-              onChange(preContext, text, postContext);
-            }
-          });
+            });
+        else if (!unclick && !reselection)
+          api.clickSentence(sentence.index)
+            .then(([preContext, text, postContext]) => {
+                activateSentenceIndex(sentence.index);
+                onChange(preContext, text, postContext);
+            });
+      }}
+      onDoubleClick={(event) => {
+        const reselection = isActive;
+        const unclick = event.ctrlKey || event.altKey;
+
+        if (!unclick && reselection)
+          api.clickSentence(sentence.index);
       }}
     >
       <span
