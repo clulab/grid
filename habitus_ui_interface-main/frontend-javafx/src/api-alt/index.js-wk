@@ -51,11 +51,21 @@ export const api = {
 
     return [clickedSentences];
   },
+  doubleClickCell: async function(rowIndex, colIndex) {
+    fetchForApi(function() { return window.wkgridserver.doubleClickCell(rowIndex, colIndex); });
+
+    return [];
+  },
   clickSentence: async function(sentenceIndex) {
     const json = fetchForApi(function() { return window.wkgridserver.clickSentence(sentenceIndex); });
     const [preContext, text, postContext] = json;
 
     return [preContext, text, postContext];
+  },
+  doubleClickSentence: async function(sentenceIndex) {
+    fetchForApi(function() { return window.wkgridserver.doubleClickSentence(sentenceIndex); });
+
+    return [];
   },
   dragSentence: async function(colIndex, sentenceIndex) {
     const json = fetchForApi(function() { return window.wkgridserver.dragSentence(colIndex, sentenceIndex); });

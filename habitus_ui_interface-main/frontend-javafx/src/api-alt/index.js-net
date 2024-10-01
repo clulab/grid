@@ -69,12 +69,24 @@ export const api = {
 
     return [clickedSentences];
   },
+  doubleClickCell: async function(rowIndex, colIndex) {
+    const query = toQuery([["rowIndex", rowIndex], ["colIndex", colIndex]]);
+    /*const json =*/ await fetchForApi(`/doubleClickCell${query}`);
+
+    return [];
+  },
   clickSentence: async function(sentenceIndex) {
     const query = toQuery([["sentenceIndex", sentenceIndex]]);
     const json = await fetchForApi(`/clickSentence${query}`);
     const [preContext, text, postContext] = json;
 
     return [preContext, text, postContext];
+  },
+  doubleClickSentence: async function(sentenceIndex) {
+    const query = toQuery([["sentenceIndex", sentenceIndex]]);
+    /*const json =*/ await fetchForApi(`/doubleClickSentence${query}`);
+
+    return [];
   },
   dragSentence: async function(colIndex, sentenceIndex) {
     const query = toQuery([["colIndex", colIndex], ["sentenceIndex", sentenceIndex]]);
