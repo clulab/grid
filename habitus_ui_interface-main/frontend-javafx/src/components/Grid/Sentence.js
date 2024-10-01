@@ -34,8 +34,8 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
         else if (!unclick && !reselection)
           api.clickSentence(sentence.index)
             .then(([preContext, text, postContext]) => {
-                activateSentenceIndex(sentence.index);
-                onChange(preContext, text, postContext);
+              activateSentenceIndex(sentence.index);
+              onChange(preContext, text, postContext);
             });
       }}
       onDoubleClick={(event) => {
@@ -43,7 +43,7 @@ export function Sentence({ sentence, onChange, activateSentenceIndex, isActive }
         const unclick = event.ctrlKey || event.altKey;
 
         if (!unclick && reselection)
-          api.clickSentence(sentence.index);
+          api.doubleClickSentence(sentence.index);
       }}
     >
       <span
