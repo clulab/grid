@@ -13,8 +13,9 @@ root.render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/" element={<SplashScreen />} />
-        <Route path="/grid" element={<GridPage />} />
+        <Route path="/" element={<GridPage />} />
+        // <Route path="/" element={<SplashScreen />} />
+        // <Route path="/grid" element={<GridPage />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>
