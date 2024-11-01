@@ -37,10 +37,15 @@ export const api = {
   getGrid: async function() {
     const json = fetchForApi(function() { return window.wkgridserver.getGrid(); });
 
-    return destructureGrid(json);
+    return json;
   },
   newGrid: async function() {
     const json = fetchForApi(function() { return window.wkgridserver.newGrid(); });
+
+    return destructureGrid(json);
+  },
+  showGrid: async function() {
+    const json = fetchForApi(function() { return window.wkgridserver.showGrid(); });
 
     return destructureGrid(json);
   },

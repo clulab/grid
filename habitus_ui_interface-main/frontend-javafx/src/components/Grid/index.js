@@ -94,7 +94,7 @@ export function Grid() {
 
   useEffect(() => {
     setWaiting(true);
-    api.getGrid()
+    api.showGrid()
       .then((gridStructure) => {
         saveGrid(gridStructure);
         setWaiting(false);
