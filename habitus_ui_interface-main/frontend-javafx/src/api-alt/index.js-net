@@ -52,12 +52,17 @@ export const api = {
   },
 
   getGrid: async function() {
-    const json = await fetchForApi('/getGrid');
+    const json = await fetchForApi("/getGrid")
+
+    return json;
+  },
+  newGrid: async function() {
+    const json = await fetchForApi("/newGrid");
 
     return destructureGrid(json);
   },
-  newGrid: async function() {
-    const json = await fetchForApi(`/newGrid`);
+  showGrid: async function() {
+    const json = await fetchForApi("/showGrid");
 
     return destructureGrid(json);
   },
